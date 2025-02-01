@@ -1,9 +1,5 @@
-import * as icons from '@icons';
+// import * as icons from '@icons';
 
-const allIconsList = {
-	'arrow-left': icons.ArrowLeftIcon,
-	'arrow-right': icons.ArrowRightIcon,
-	'arrow-enter': icons.ArrowEnterIcon
-};
+const allIconsList = {};
 
 export default allIconsList;

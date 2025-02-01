@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { animated } from '@react-spring/web';
 
-export const Backdrop = styled(animated.div)`
+export const Backdrop = styled.div`
 	position: absolute;
 	inset: 0;
 	z-index: 9998;
