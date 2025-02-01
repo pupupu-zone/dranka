@@ -11,35 +11,14 @@
 // Import Routes
 
 import { Route as rootRoute } from './core/routes/__root'
-import { Route as CountriesRouteImport } from './core/routes/countries/route'
 import { Route as IndexImport } from './core/routes/index'
-import { Route as CountriesIndexImport } from './core/routes/countries/index'
-import { Route as CountriesCountryImport } from './core/routes/countries/$country'
 
 // Create/Update Routes
-
-const CountriesRouteRoute = CountriesRouteImport.update({
-  id: '/countries',
-  path: '/countries',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
-
-const CountriesIndexRoute = CountriesIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => CountriesRouteRoute,
-} as any)
-
-const CountriesCountryRoute = CountriesCountryImport.update({
-  id: '/$country',
-  path: '/$country',
-  getParentRoute: () => CountriesRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -53,84 +32,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/countries': {
-      id: '/countries'
-      path: '/countries'
-      fullPath: '/countries'
-      preLoaderRoute: typeof CountriesRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/countries/$country': {
-      id: '/countries/$country'
-      path: '/$country'
-      fullPath: '/countries/$country'
-      preLoaderRoute: typeof CountriesCountryImport
-      parentRoute: typeof CountriesRouteImport
-    }
-    '/countries/': {
-      id: '/countries/'
-      path: '/'
-      fullPath: '/countries/'
-      preLoaderRoute: typeof CountriesIndexImport
-      parentRoute: typeof CountriesRouteImport
-    }
   }
 }
 
 // Create and export the route tree
 
-interface CountriesRouteRouteChildren {
-  CountriesCountryRoute: typeof CountriesCountryRoute
-  CountriesIndexRoute: typeof CountriesIndexRoute
-}
-
-const CountriesRouteRouteChildren: CountriesRouteRouteChildren = {
-  CountriesCountryRoute: CountriesCountryRoute,
-  CountriesIndexRoute: CountriesIndexRoute,
-}
-
-const CountriesRouteRouteWithChildren = CountriesRouteRoute._addFileChildren(
-  CountriesRouteRouteChildren,
-)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/countries': typeof CountriesRouteRouteWithChildren
-  '/countries/$country': typeof CountriesCountryRoute
-  '/countries/': typeof CountriesIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/countries/$country': typeof CountriesCountryRoute
-  '/countries': typeof CountriesIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/countries': typeof CountriesRouteRouteWithChildren
-  '/countries/$country': typeof CountriesCountryRoute
-  '/countries/': typeof CountriesIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/countries' | '/countries/$country' | '/countries/'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/countries/$country' | '/countries'
-  id: '__root__' | '/' | '/countries' | '/countries/$country' | '/countries/'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CountriesRouteRoute: typeof CountriesRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CountriesRouteRoute: CountriesRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -143,27 +77,11 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/countries"
+        "/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/countries": {
-      "filePath": "countries/route.tsx",
-      "children": [
-        "/countries/$country",
-        "/countries/"
-      ]
-    },
-    "/countries/$country": {
-      "filePath": "countries/$country.tsx",
-      "parent": "/countries"
-    },
-    "/countries/": {
-      "filePath": "countries/index.tsx",
-      "parent": "/countries"
     }
   }
 }

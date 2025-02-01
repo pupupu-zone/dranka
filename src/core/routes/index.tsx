@@ -1,5 +1,6 @@
-import { Outlet, createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import MainView from '@views/main';
 
 export const Route = createFileRoute('/')({
-	component: Outlet
+	component: MainView
 });
