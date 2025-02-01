@@ -1,0 +1,39 @@
+name: Semantic Release
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build & Deploy"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      # - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+      #   run: pnpm audit --prod
+      - name: Release
+        run: pnpm dlx semantic-release
