@@ -5,7 +5,7 @@ import { routeTree } from './routeTree.gen';
 import { createRouter } from '@tanstack/react-router';
 
 import RootApp from '@core/Root.tsx';
-import init, { fibonacci } from '../rust/pkg/dranka';
+import init, { fibonacci } from 'public/wasm/dranka';
 
 async function wasmTest() {
 	await init();
