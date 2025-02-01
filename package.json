@@ -9,7 +9,9 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "vite build",
+    "build": "pnpm run build:wasm && pnpm run build:js",
+    "build:wasm": "wasm-pack build ./rust --target web --release --out-dir ../public/wasm",
+    "build:js": "vite build",
     "preview": "vite preview",
     "lint": "eslint",
     "format": "prettier --write \"src/**/*.{js,ts,tsx,jsx,json}\""

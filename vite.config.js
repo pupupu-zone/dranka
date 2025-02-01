@@ -48,6 +48,13 @@ const config = ({ mode }) => {
 					manualChunks: {
 						vendor: globalVendorPackages,
 						...renderChunks(dependencies)
+					},
+					assetFileNames: (assetInfo) => {
+						if (assetInfo.name.endsWith('.wasm')) {
+							return 'assets/wasm/[name].[hash][extname]';
+						}
+
+						return 'assets/[name].[hash][extname]';
 					}
 				}
 			}

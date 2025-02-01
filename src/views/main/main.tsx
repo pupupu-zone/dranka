@@ -10,12 +10,14 @@ import Root, { Header } from './main.styles';
 const MainView = () => {
 	const fileReader = useRef(new FileReader());
 	const [image64, setImage64] = useState('');
+	const [wasmImage, setWasmImage] = useState('');
 
 	useEffect(() => {
 		fileReader.current.onloadend = () => {
 			const result = fileReader.current.result as string;
 
 			setImage64(result);
+			setWasmImage(result.replace(/^data:image\/[^;]+;base64,/, ''));
 		};
 	}, []);
 

@@ -5,17 +5,16 @@ import { routeTree } from './routeTree.gen';
 import { createRouter } from '@tanstack/react-router';
 
 import RootApp from '@core/Root.tsx';
-// import init, { fibonacci } from '../rust/pkg/dranka';
+import init, { fibonacci } from '../rust/pkg/dranka';
 
-// async function test() {
-// 	await init();
+async function wasmTest() {
+	await init();
 
-// 	const result = fibonacci(10);
-// 	console.log(`Fibonacci(10) = ${result}`);
+	const result = fibonacci(10);
+	console.log(`Fibonacci(10) = ${result}`);
+}
 
-// 	// Add to DOM
-// 	document.getElementById('modal').textContent = `Fibonacci(10) = ${result}`;
-// }
+wasmTest();
 
 // Set up a Router instance
 const router = createRouter({
