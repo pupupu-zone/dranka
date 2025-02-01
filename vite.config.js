@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url';
 import { defineConfig, loadEnv } from 'vite';
 
 import svgr from 'vite-plugin-svgr';
+import wasm from 'vite-plugin-wasm';
 import react from '@vitejs/plugin-react-swc';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import templateLiteralPlugin from './vite-plugin-minify-template-literals/index.cjs';
@@ -39,6 +40,7 @@ const config = ({ mode }) => {
 	return defineConfig({
 		build: {
 			minify: 'terser',
+			target: 'esnext',
 			sourcemap: false,
 			rollupOptions: {
 				external: ['chokidar'],
@@ -57,6 +59,7 @@ const config = ({ mode }) => {
 				enableRouteGeneration: true,
 				autoCodeSplitting: false
 			}),
+			wasm(),
 			svgr(),
 			react(),
 			templateLiteralPlugin()
