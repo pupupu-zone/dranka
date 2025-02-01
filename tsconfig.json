@@ -1,0 +1,65 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+
+    // custom paths
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["./src/*"],
+
+      "@styles": ["./src/core/styles/index"],
+      "@styles/*": ["./src/core/styles/*"],
+
+      "@core": ["./src/core"],
+      "@core/*": ["./src/core/*"],
+
+      "@ui": ["./src/ui/index"],
+      "@ui/*": ["./src/ui/*"],
+
+      "@utils": ["./src/utils/index"],
+      "@utils/*": ["./src/utils/*"],
+
+      "@hooks": ["./src/utils/hooks/index"],
+      "@hooks/*": ["./src/utils/hooks/*"],
+
+      "@icons": ["./src/assets/icons/index"],
+      "@icons/*": ["./src/assets/icons/*"],
+
+      "@images": ["./src/assets/images/index"],
+      "@images/*": ["./src/assets/images/*"],
+
+      "@assets": ["./src/assets/index"],
+      "@assets/*": ["./src/assets/*"],
+
+      "@fonts/*": ["./src/assets/fonts/*"],
+
+      "@views": ["./src/views/index"],
+      "@views/*": ["./src/views/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
