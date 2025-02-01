@@ -48,13 +48,6 @@ const config = ({ mode }) => {
 					manualChunks: {
 						vendor: globalVendorPackages,
 						...renderChunks(dependencies)
-					},
-					assetFileNames: (assetInfo) => {
-						if (assetInfo.name.endsWith('.wasm')) {
-							return 'assets/wasm/[name].[hash][extname]';
-						}
-
-						return 'assets/[name].[hash][extname]';
 					}
 				}
 			}
@@ -73,6 +66,7 @@ const config = ({ mode }) => {
 		],
 		resolve: {
 			alias: {
+				'@wasm': fileURLToPath(new URL('./public/wasm', import.meta.url)),
 				'@src': fileURLToPath(new URL('./src', import.meta.url)),
 				'@styles': fileURLToPath(new URL('./src/core/styles', import.meta.url)),
 				'@core': fileURLToPath(new URL('./src/core', import.meta.url)),
