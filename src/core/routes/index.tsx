@@ -1,6 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router';
-import MainView from '@views/main';
+import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
-	component: MainView
+	beforeLoad: () => {
+		throw redirect({ to: '/filters' });
+	},
+	component: Outlet
 });

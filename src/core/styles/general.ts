@@ -9,12 +9,18 @@ const General = createGlobalStyle`
 		--bg-color: #2A2A2A;
 		--accent: #8CC5C5;
 		--popup-bg: #fefefe;
+		--text-color: #fefefe;
 
 		/* Primary button styles */
 		--primary-button-text: #fefefe;
 		--primary-button: 58% 0.14 289; ${'' /* #7a6ac7 */}
 		--primary-button-hover: 62% 0.14 289; ${'' /* #8A7BDC */}
 		--primary-button-press: 42% 0.12 292; ${'' /* #4F3E87 */}
+
+		/* Controls */
+		--controls-bg: #5f5f5f;
+		--controls-text: #fefefe;
+		--controls-dim-text: #2f2f2f;
 	}
 
 	html {

@@ -11,14 +11,56 @@
 // Import Routes
 
 import { Route as rootRoute } from './core/routes/__root'
+import { Route as MergeRouteImport } from './core/routes/merge/route'
+import { Route as FiltersRouteImport } from './core/routes/filters/route'
+import { Route as CropRouteImport } from './core/routes/crop/route'
 import { Route as IndexImport } from './core/routes/index'
+import { Route as MergeIndexImport } from './core/routes/merge/index'
+import { Route as FiltersIndexImport } from './core/routes/filters/index'
+import { Route as CropIndexImport } from './core/routes/crop/index'
 
 // Create/Update Routes
+
+const MergeRouteRoute = MergeRouteImport.update({
+  id: '/merge',
+  path: '/merge',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FiltersRouteRoute = FiltersRouteImport.update({
+  id: '/filters',
+  path: '/filters',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CropRouteRoute = CropRouteImport.update({
+  id: '/crop',
+  path: '/crop',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const MergeIndexRoute = MergeIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MergeRouteRoute,
+} as any)
+
+const FiltersIndexRoute = FiltersIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FiltersRouteRoute,
+} as any)
+
+const CropIndexRoute = CropIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CropRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -32,39 +74,153 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/crop': {
+      id: '/crop'
+      path: '/crop'
+      fullPath: '/crop'
+      preLoaderRoute: typeof CropRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/filters': {
+      id: '/filters'
+      path: '/filters'
+      fullPath: '/filters'
+      preLoaderRoute: typeof FiltersRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/merge': {
+      id: '/merge'
+      path: '/merge'
+      fullPath: '/merge'
+      preLoaderRoute: typeof MergeRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/crop/': {
+      id: '/crop/'
+      path: '/'
+      fullPath: '/crop/'
+      preLoaderRoute: typeof CropIndexImport
+      parentRoute: typeof CropRouteImport
+    }
+    '/filters/': {
+      id: '/filters/'
+      path: '/'
+      fullPath: '/filters/'
+      preLoaderRoute: typeof FiltersIndexImport
+      parentRoute: typeof FiltersRouteImport
+    }
+    '/merge/': {
+      id: '/merge/'
+      path: '/'
+      fullPath: '/merge/'
+      preLoaderRoute: typeof MergeIndexImport
+      parentRoute: typeof MergeRouteImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface CropRouteRouteChildren {
+  CropIndexRoute: typeof CropIndexRoute
+}
+
+const CropRouteRouteChildren: CropRouteRouteChildren = {
+  CropIndexRoute: CropIndexRoute,
+}
+
+const CropRouteRouteWithChildren = CropRouteRoute._addFileChildren(
+  CropRouteRouteChildren,
+)
+
+interface FiltersRouteRouteChildren {
+  FiltersIndexRoute: typeof FiltersIndexRoute
+}
+
+const FiltersRouteRouteChildren: FiltersRouteRouteChildren = {
+  FiltersIndexRoute: FiltersIndexRoute,
+}
+
+const FiltersRouteRouteWithChildren = FiltersRouteRoute._addFileChildren(
+  FiltersRouteRouteChildren,
+)
+
+interface MergeRouteRouteChildren {
+  MergeIndexRoute: typeof MergeIndexRoute
+}
+
+const MergeRouteRouteChildren: MergeRouteRouteChildren = {
+  MergeIndexRoute: MergeIndexRoute,
+}
+
+const MergeRouteRouteWithChildren = MergeRouteRoute._addFileChildren(
+  MergeRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/crop': typeof CropRouteRouteWithChildren
+  '/filters': typeof FiltersRouteRouteWithChildren
+  '/merge': typeof MergeRouteRouteWithChildren
+  '/crop/': typeof CropIndexRoute
+  '/filters/': typeof FiltersIndexRoute
+  '/merge/': typeof MergeIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/crop': typeof CropIndexRoute
+  '/filters': typeof FiltersIndexRoute
+  '/merge': typeof MergeIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/crop': typeof CropRouteRouteWithChildren
+  '/filters': typeof FiltersRouteRouteWithChildren
+  '/merge': typeof MergeRouteRouteWithChildren
+  '/crop/': typeof CropIndexRoute
+  '/filters/': typeof FiltersIndexRoute
+  '/merge/': typeof MergeIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/crop'
+    | '/filters'
+    | '/merge'
+    | '/crop/'
+    | '/filters/'
+    | '/merge/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/crop' | '/filters' | '/merge'
+  id:
+    | '__root__'
+    | '/'
+    | '/crop'
+    | '/filters'
+    | '/merge'
+    | '/crop/'
+    | '/filters/'
+    | '/merge/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CropRouteRoute: typeof CropRouteRouteWithChildren
+  FiltersRouteRoute: typeof FiltersRouteRouteWithChildren
+  MergeRouteRoute: typeof MergeRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CropRouteRoute: CropRouteRouteWithChildren,
+  FiltersRouteRoute: FiltersRouteRouteWithChildren,
+  MergeRouteRoute: MergeRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +233,44 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/crop",
+        "/filters",
+        "/merge"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/crop": {
+      "filePath": "crop/route.tsx",
+      "children": [
+        "/crop/"
+      ]
+    },
+    "/filters": {
+      "filePath": "filters/route.tsx",
+      "children": [
+        "/filters/"
+      ]
+    },
+    "/merge": {
+      "filePath": "merge/route.tsx",
+      "children": [
+        "/merge/"
+      ]
+    },
+    "/crop/": {
+      "filePath": "crop/index.tsx",
+      "parent": "/crop"
+    },
+    "/filters/": {
+      "filePath": "filters/index.tsx",
+      "parent": "/filters"
+    },
+    "/merge/": {
+      "filePath": "merge/index.tsx",
+      "parent": "/merge"
     }
   }
 }
