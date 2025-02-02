@@ -49,6 +49,7 @@ fn adjust_grayscale(img: &DynamicImage, strength: f32) -> DynamicImage {
     let rgba_img = img.to_rgba8();
     let (width, height) = rgba_img.dimensions();
     let mut output = ImageBuffer::new(width, height);
+    let weight = (1.0 - strength);
 
     for (x, y, pixel) in rgba_img.enumerate_pixels() {
         let r = pixel[0] as f32;
@@ -58,9 +59,9 @@ fn adjust_grayscale(img: &DynamicImage, strength: f32) -> DynamicImage {
 
         let gray = 0.3 * r + 0.6 * g + 0.12 * b;
 
-        let r = r * (1.0 - strength) + gray * strength;
-        let g = g * (1.0 - strength) + gray * strength;
-        let b = b * (1.0 - strength) + gray * strength;
+        let r = r * weight + gray * strength;
+        let g = g * weight + gray * strength;
+        let b = b * weight + gray * strength;
 
         output.put_pixel(x, y, Rgba([r as u8, g as u8, b as u8, a as u8]));
     }
@@ -83,6 +84,8 @@ pub fn grayscale(init_base64: &str, strength: f32) -> String {
 }
 
 fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
+    let weight = (1.0 - strength);
+
     let dynamic_image = match img.color() {
         ColorType::Rgb8 | ColorType::Rgb16 | ColorType::Rgb32F => {
             let rgb_img = img.to_rgb8();
@@ -98,9 +101,9 @@ fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
                 let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
                 let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
 
-                let r = (r * (1.0 - strength) + sepia_r * strength) as u8;
-                let g = (g * (1.0 - strength) + sepia_g * strength) as u8;
-                let b = (b * (1.0 - strength) + sepia_b * strength) as u8;
+                let r = (r * weight + sepia_r * strength) as u8;
+                let g = (g * weight + sepia_g * strength) as u8;
+                let b = (b * weight + sepia_b * strength) as u8;
 
                 output.put_pixel(x, y, Rgb([r, g, b]));
             }
@@ -122,9 +125,9 @@ fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
                 let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
                 let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
 
-                let r = (r * (1.0 - strength) + sepia_r * strength) as u8;
-                let g = (g * (1.0 - strength) + sepia_g * strength) as u8;
-                let b = (b * (1.0 - strength) + sepia_b * strength) as u8;
+                let r = (r * weight + sepia_r * strength) as u8;
+                let g = (g * weight + sepia_g * strength) as u8;
+                let b = (b * weight + sepia_b * strength) as u8;
 
                 output.put_pixel(x, y, Rgba([r, g, b, a]));
             }
