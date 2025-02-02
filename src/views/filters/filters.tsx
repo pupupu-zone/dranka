@@ -7,29 +7,24 @@ import Root, { Scroll, Card, Label, Preview, Img, FiltersList } from './filters.
 
 const FILTERS = [
 	{
+		id: 'original',
+		label: 'Original'
+	},
+	{
 		id: 'grayscale',
-		label: 'Grayscale',
-		defaultValue: 50
+		label: 'Grayscale'
 	},
 	{
 		id: 'invert',
-		label: 'Invert',
-		defaultValue: 75
+		label: 'Invert'
 	},
 	{
 		id: 'sepia',
-		label: 'Sepia',
-		defaultValue: 25
+		label: 'Sepia'
 	},
 	{
 		id: 'blur',
-		label: 'Blur',
-		defaultValue: 25
-	},
-	{
-		id: 'hue',
-		label: 'Hue',
-		defaultValue: 25
+		label: 'Blur'
 	}
 ];
 
