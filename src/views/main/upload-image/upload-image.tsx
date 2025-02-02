@@ -21,7 +21,7 @@ const UploadImage = ({ fileReader }: Props) => {
 
 	return (
 		<Root as={AriaButton} onPress={openImageDialog}>
-			<ImageSelector ref={imageRef} type="file" hidden onChange={loadImageHd} />
+			<ImageSelector ref={imageRef} type="file" hidden onChange={loadImageHd} accept="image/*" />
 
 			<ImageLoadIcon width={128} />
 
