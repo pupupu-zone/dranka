@@ -78,3 +78,71 @@ pub fn grayscale(init_base64: &str, strength: f32) -> String {
 
     to_base64(new_image.into_inner())
 }
+
+#[wasm_bindgen]
+pub fn invert(init_base64: &str) -> String {
+    if init_base64.is_empty() {
+        return "".to_string();
+    }
+
+    let mut image = get_image(&init_base64);
+    image.invert();
+    let new_image = create_image(image);
+
+    to_base64(new_image.into_inner())
+}
+
+fn apply_sepia(img: &DynamicImage) -> DynamicImage {
+    let rgba_img = img.to_rgba8();
+    let (width, height) = rgba_img.dimensions();
+    let mut output = ImageBuffer::new(width, height);
+
+    for (x, y, pixel) in rgba_img.enumerate_pixels() {
+        // Get RGB values
+        let r = pixel[0] as f32;
+        let g = pixel[1] as f32;
+        let b = pixel[2] as f32;
+        let a = pixel[3] as f32;
+
+        // Sepia formula
+        let sepia_r = (0.393 * r + 0.769 * g + 0.189 * b).min(255.0);
+        let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
+        let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
+        let sepia_a = a;
+
+        output.put_pixel(
+            x,
+            y,
+            Rgba([sepia_r as u8, sepia_g as u8, sepia_b as u8, sepia_a as u8]),
+        );
+    }
+
+    DynamicImage::ImageRgba8(output)
+}
+
+#[wasm_bindgen]
+pub fn sepia(init_base64: &str) -> String {
+    if init_base64.is_empty() {
+        return "".to_string();
+    }
+
+    let image = get_image(&init_base64);
+    let modified_image = apply_sepia(&image);
+    let new_image = create_image(modified_image);
+
+    to_base64(new_image.into_inner())
+}
+
+#[wasm_bindgen]
+pub fn blur(init_base64: &str, strength: f32) -> String {
+    if init_base64.is_empty() {
+        return "".to_string();
+    }
+
+    let strength = strength.clamp(0.0, 10.0);
+    let image = get_image(&init_base64);
+    let image = image.blur(strength);
+    let new_image = create_image(image);
+
+    to_base64(new_image.into_inner())
+}

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, Outlet } from '@tanstack/react-router';
 
-import { grayscale } from '@wasm/dranka';
 import MainContext from '@views/context';
+import { grayscale, invert, sepia, blur } from '@wasm/dranka';
 
 import UploadImage from './upload-image';
 import ImagePreview from './image-preview';
@@ -33,6 +33,24 @@ const MainView = () => {
 			const grayImage64 = grayscale(image64, 1);
 
 			setImageToView(grayImage64);
+		}
+
+		if (action === 'invert') {
+			const invertImage = invert(image64);
+
+			setImageToView(invertImage);
+		}
+
+		if (action === 'sepia') {
+			const sepiaImage = sepia(image64);
+
+			setImageToView(sepiaImage);
+		}
+
+		if (action === 'blur') {
+			const blurImage = blur(image64, 10);
+
+			setImageToView(blurImage);
 		}
 	}, [action, image64]);
 
