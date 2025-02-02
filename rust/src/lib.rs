@@ -81,47 +81,53 @@ pub fn grayscale(init_base64: &str, strength: f32) -> String {
 }
 
 fn apply_sepia(img: &DynamicImage) -> DynamicImage {
-    let rgba_img = img.to_rgba8();
-    let (width, height) = rgba_img.dimensions();
-    let mut output = ImageBuffer::new(width, height);
+    let dynamic_image = match img.color() {
+        ColorType::Rgb8 | ColorType::Rgb16 | ColorType::Rgb32F => {
+            let rgb_img = img.to_rgb8();
+            let (width, height) = rgb_img.dimensions();
+            let mut output = ImageBuffer::new(width, height);
 
-    for (x, y, pixel) in rgba_img.enumerate_pixels() {
-        let r = pixel[0] as f32;
-        let g = pixel[1] as f32;
-        let b = pixel[2] as f32;
-        let a = pixel[3] as f32;
+            for (x, y, pixel) in rgb_img.enumerate_pixels() {
+                let r = pixel[0] as f32;
+                let g = pixel[1] as f32;
+                let b = pixel[2] as f32;
 
-        // Sepia formula
-        let sepia_r = (0.393 * r + 0.769 * g + 0.189 * b).min(255.0);
-        let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
-        let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
-        let sepia_a = a;
+                let sepia_r = (0.393 * r + 0.769 * g + 0.189 * b).min(255.0);
+                let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
+                let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
 
-        output.put_pixel(
-            x,
-            y,
-            Rgba([sepia_r as u8, sepia_g as u8, sepia_b as u8, sepia_a as u8]),
-        );
-    }
+                output.put_pixel(x, y, Rgb([sepia_r as u8, sepia_g as u8, sepia_b as u8]));
+            }
 
-    DynamicImage::ImageRgba8(output)
-}
+            DynamicImage::ImageRgb8(output)
+        }
+        _ => {
+            let rgba_img = img.to_rgba8();
+            let (width, height) = rgba_img.dimensions();
+            let mut output = ImageBuffer::new(width, height);
 
-fn apply_invert(img: &DynamicImage) -> DynamicImage {
-    let rgba_img = img.to_rgba8();
-    let (width, height) = rgba_img.dimensions();
-    let mut output = ImageBuffer::new(width, height);
+            for (x, y, pixel) in rgba_img.enumerate_pixels() {
+                let r = pixel[0] as f32;
+                let g = pixel[1] as f32;
+                let b = pixel[2] as f32;
+                let a = pixel[3] as f32;
 
-    for (x, y, pixel) in rgba_img.enumerate_pixels() {
-        let r = 255 - pixel[0];
-        let g = 255 - pixel[1];
-        let b = 255 - pixel[2];
-        let a = pixel[3];
+                let sepia_r = (0.393 * r + 0.769 * g + 0.189 * b).min(255.0);
+                let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
+                let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
 
-        output.put_pixel(x, y, Rgba([r, g, b, a]));
-    }
+                output.put_pixel(
+                    x,
+                    y,
+                    Rgba([sepia_r as u8, sepia_g as u8, sepia_b as u8, a as u8]),
+                );
+            }
 
-    DynamicImage::ImageRgba8(output)
+            DynamicImage::ImageRgba8(output)
+        }
+    };
+
+    dynamic_image
 }
 
 #[wasm_bindgen]
@@ -130,11 +136,15 @@ pub fn sepia(init_base64: &str) -> String {
         return "".to_string();
     }
 
-    let image = get_image(&init_base64);
-    let modified_image = apply_sepia(&image);
-    let new_image = create_image(modified_image, ImageFormat::WebP);
+    let base64 = prepare_base64(init_base64);
+    let image = base64_to_image(&base64);
+    let extension = image::guess_format(&image).expect("Failed to guess format");
+    let image = load_from_memory(&image).expect("Invalid image data");
 
-    to_base64(new_image.into_inner(), ImageFormat::WebP)
+    let modified_image = apply_sepia(&image);
+    let new_image = create_image(modified_image, extension);
+
+    to_base64(new_image.into_inner(), extension)
 }
 
 #[wasm_bindgen]
@@ -143,11 +153,15 @@ pub fn invert(init_base64: &str) -> String {
         return "".to_string();
     }
 
-    let image = get_image(&init_base64);
-    let modified_image = apply_invert(&image);
-    let new_image = create_image(modified_image, ImageFormat::WebP);
+    let base64 = prepare_base64(init_base64);
+    let image = base64_to_image(&base64);
+    let extension = image::guess_format(&image).expect("Failed to guess format");
+    let mut image = load_from_memory(&image).expect("Invalid image data");
 
-    to_base64(new_image.into_inner(), ImageFormat::WebP)
+    image.invert();
+    let new_image = create_image(image, extension);
+
+    to_base64(new_image.into_inner(), extension)
 }
 
 #[wasm_bindgen]
@@ -161,6 +175,7 @@ pub fn blur(init_base64: &str, strength: f32) -> String {
     let image = base64_to_image(&base64);
     let extension = image::guess_format(&image).expect("Failed to guess format");
     let image = load_from_memory(&image).expect("Invalid image data");
+
     let modified_image = image.blur(strength);
     let new_image = create_image(modified_image, extension);
 
