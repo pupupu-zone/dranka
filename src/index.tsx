@@ -5,16 +5,9 @@ import { routeTree } from './routeTree.gen';
 import { createRouter } from '@tanstack/react-router';
 
 import RootApp from '@core/Root.tsx';
-import init, { fibonacci } from '@wasm/dranka';
+import initWASM from '@wasm/dranka';
 
-async function wasmTest() {
-	await init();
-
-	const result = fibonacci(10);
-	console.log(`Fibonacci(10) = ${result}`);
-}
-
-wasmTest();
+await initWASM();
 
 // Set up a Router instance
 const router = createRouter({

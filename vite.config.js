@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from 'vite';
 
 import svgr from 'vite-plugin-svgr';
 import wasm from 'vite-plugin-wasm';
+import { watch } from 'vite-plugin-watch';
 import react from '@vitejs/plugin-react-swc';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import templateLiteralPlugin from './vite-plugin-minify-template-literals/index.cjs';
@@ -62,6 +63,10 @@ const config = ({ mode }) => {
 			wasm(),
 			svgr(),
 			react(),
+			watch({
+				pattern: 'rust/**/*.rs',
+				command: 'pnpm run build:wasm'
+			}),
 			templateLiteralPlugin()
 		],
 		resolve: {

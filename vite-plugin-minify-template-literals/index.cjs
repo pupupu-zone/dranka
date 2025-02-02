@@ -1,4 +1,7 @@
-// https://github.com/gatsbylabs/vite-plugin-minify-template-literals/blob/main/src/index.ts
+/*
+ * base for that flugin has been taken from
+ * https://github.com/gatsbylabs/vite-plugin-minify-template-literals/blob/main/src/index.ts
+ */
 
 import { minifyRaw } from 'babel-plugin-styled-components/lib/minify';
 import MagicString from 'magic-string';
