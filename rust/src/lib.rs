@@ -98,7 +98,6 @@ fn apply_sepia(img: &DynamicImage) -> DynamicImage {
     let mut output = ImageBuffer::new(width, height);
 
     for (x, y, pixel) in rgba_img.enumerate_pixels() {
-        // Get RGB values
         let r = pixel[0] as f32;
         let g = pixel[1] as f32;
         let b = pixel[2] as f32;
