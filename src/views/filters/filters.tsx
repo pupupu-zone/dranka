@@ -1,7 +1,9 @@
 import React from 'react';
 
+import previewImg from '@images/preview.jpg';
+import { HorizontalScroll } from '@ui';
 import { Button as AriaButton } from 'react-aria-components';
-import Root, { FilterCard } from './filters.styles';
+import Root, { Scroll, Card, Label, Preview, Img, FiltersList } from './filters.styles';
 
 const FILTERS = [
 	{
@@ -11,24 +13,44 @@ const FILTERS = [
 	},
 	{
 		id: 'invert',
-		label: 'Invert colors',
+		label: 'Invert',
 		defaultValue: 75
 	},
 	{
 		id: 'sepia',
 		label: 'Sepia',
 		defaultValue: 25
+	},
+	{
+		id: 'blur',
+		label: 'Blur',
+		defaultValue: 25
+	},
+	{
+		id: 'hue',
+		label: 'HUE Rotate',
+		defaultValue: 25
 	}
 ];
 
-const FiltersView = () => (
-	<Root>
-		{FILTERS.map((filter) => (
-			<FilterCard key={filter.id} as={AriaButton}>
-				{filter.label}
-			</FilterCard>
-		))}
-	</Root>
-);
+const FilterActions = () => {
+	return (
+		<Root>
+			<HorizontalScroll as={Scroll}>
+				<FiltersList>
+					{FILTERS.map((filter) => (
+						<Card key={filter.id} as={AriaButton}>
+							<Preview>
+								<Img src={previewImg} alt="Preview" $effect={filter.id} />
+							</Preview>
 
-export default FiltersView;
+							<Label>{filter.label}</Label>
+						</Card>
+					))}
+				</FiltersList>
+			</HorizontalScroll>
+		</Root>
+	);
+};
+
+export default FilterActions;
