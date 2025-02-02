@@ -51,16 +51,18 @@ fn adjust_grayscale(img: &DynamicImage, strength: f32) -> DynamicImage {
     let mut output = ImageBuffer::new(width, height);
 
     for (x, y, pixel) in rgba_img.enumerate_pixels() {
-        // Calculate grayscale value using luminance formula (numbers are luma coefficients)
-        let gray = (0.3 * pixel[0] as f32 + 0.6 * pixel[1] as f32 + 0.12 * pixel[2] as f32) as u8;
+        let r = pixel[0] as f32;
+        let g = pixel[1] as f32;
+        let b = pixel[2] as f32;
+        let a = pixel[3] as f32;
 
-        // Interpolate between original and grayscale
-        let r = (pixel[0] as f32 * (1.0 - strength) + gray as f32 * strength) as u8;
-        let g = (pixel[1] as f32 * (1.0 - strength) + gray as f32 * strength) as u8;
-        let b = (pixel[2] as f32 * (1.0 - strength) + gray as f32 * strength) as u8;
-        let a = pixel[3];
+        let gray = 0.3 * r + 0.6 * g + 0.12 * b;
 
-        output.put_pixel(x, y, Rgba([r, g, b, a]));
+        let r = r * (1.0 - strength) + gray * strength;
+        let g = g * (1.0 - strength) + gray * strength;
+        let b = b * (1.0 - strength) + gray * strength;
+
+        output.put_pixel(x, y, Rgba([r as u8, g as u8, b as u8, a as u8]));
     }
 
     DynamicImage::ImageRgba8(output)
@@ -80,7 +82,7 @@ pub fn grayscale(init_base64: &str, strength: f32) -> String {
     to_base64(new_image.into_inner(), ImageFormat::WebP)
 }
 
-fn apply_sepia(img: &DynamicImage) -> DynamicImage {
+fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
     let dynamic_image = match img.color() {
         ColorType::Rgb8 | ColorType::Rgb16 | ColorType::Rgb32F => {
             let rgb_img = img.to_rgb8();
@@ -96,7 +98,11 @@ fn apply_sepia(img: &DynamicImage) -> DynamicImage {
                 let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
                 let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
 
-                output.put_pixel(x, y, Rgb([sepia_r as u8, sepia_g as u8, sepia_b as u8]));
+                let r = (r * (1.0 - strength) + sepia_r * strength) as u8;
+                let g = (g * (1.0 - strength) + sepia_g * strength) as u8;
+                let b = (b * (1.0 - strength) + sepia_b * strength) as u8;
+
+                output.put_pixel(x, y, Rgb([r, g, b]));
             }
 
             DynamicImage::ImageRgb8(output)
@@ -110,17 +116,17 @@ fn apply_sepia(img: &DynamicImage) -> DynamicImage {
                 let r = pixel[0] as f32;
                 let g = pixel[1] as f32;
                 let b = pixel[2] as f32;
-                let a = pixel[3] as f32;
+                let a = pixel[3] as u8;
 
                 let sepia_r = (0.393 * r + 0.769 * g + 0.189 * b).min(255.0);
                 let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
                 let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
 
-                output.put_pixel(
-                    x,
-                    y,
-                    Rgba([sepia_r as u8, sepia_g as u8, sepia_b as u8, a as u8]),
-                );
+                let r = (r * (1.0 - strength) + sepia_r * strength) as u8;
+                let g = (g * (1.0 - strength) + sepia_g * strength) as u8;
+                let b = (b * (1.0 - strength) + sepia_b * strength) as u8;
+
+                output.put_pixel(x, y, Rgba([r, g, b, a]));
             }
 
             DynamicImage::ImageRgba8(output)
@@ -131,17 +137,18 @@ fn apply_sepia(img: &DynamicImage) -> DynamicImage {
 }
 
 #[wasm_bindgen]
-pub fn sepia(init_base64: &str) -> String {
+pub fn sepia(init_base64: &str, strength: f32) -> String {
     if init_base64.is_empty() {
         return "".to_string();
     }
 
+    let strength = strength.clamp(0.0, 1.0);
     let base64 = prepare_base64(init_base64);
     let image = base64_to_image(&base64);
     let extension = image::guess_format(&image).expect("Failed to guess format");
     let image = load_from_memory(&image).expect("Invalid image data");
 
-    let modified_image = apply_sepia(&image);
+    let modified_image = apply_sepia(&image, strength);
     let new_image = create_image(modified_image, extension);
 
     to_base64(new_image.into_inner(), extension)

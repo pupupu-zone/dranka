@@ -43,7 +43,7 @@ const MainView = () => {
 		}
 
 		if (action === 'sepia') {
-			const sepiaImage = sepia(image64);
+			const sepiaImage = sepia(image64, 1);
 
 			setImageToView(sepiaImage);
 		}
