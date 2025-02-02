@@ -28,7 +28,7 @@ const FILTERS = [
 	},
 	{
 		id: 'hue',
-		label: 'HUE Rotate',
+		label: 'Hue',
 		defaultValue: 25
 	}
 ];
