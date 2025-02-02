@@ -4,13 +4,11 @@ use regex::Regex;
 use std::io::Cursor;
 use wasm_bindgen::prelude::*;
 
-fn prepare_base64(init64: &str) -> String {
+fn base64_to_image(init64: &str) -> Vec<u8> {
     let re = Regex::new("^data:image/[^;]+;base64,").expect("Invalid regex");
 
-    re.replace(init64, "").into_owned()
-}
+    let base64 = re.replace(init64, "").into_owned();
 
-fn base64_to_image(base64: &str) -> Vec<u8> {
     let image = BASE64_STANDARD.decode(base64.as_bytes());
     let image = match image {
         Ok(image) => image,
@@ -29,8 +27,7 @@ fn to_base64(image: Vec<u8>, extension: ImageFormat) -> String {
 }
 
 fn get_image(base64_img: &str) -> DynamicImage {
-    let base64 = prepare_base64(base64_img);
-    let image = base64_to_image(&base64);
+    let image = base64_to_image(base64_img);
 
     load_from_memory(&image).expect("Invalid image data")
 }
@@ -49,7 +46,7 @@ fn adjust_grayscale(img: &DynamicImage, strength: f32) -> DynamicImage {
     let rgba_img = img.to_rgba8();
     let (width, height) = rgba_img.dimensions();
     let mut output = ImageBuffer::new(width, height);
-    let weight = (1.0 - strength);
+    let weight = 1.0 - strength;
 
     for (x, y, pixel) in rgba_img.enumerate_pixels() {
         let r = pixel[0] as f32;
@@ -84,7 +81,7 @@ pub fn grayscale(init_base64: &str, strength: f32) -> String {
 }
 
 fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
-    let weight = (1.0 - strength);
+    let weight = 1.0 - strength;
 
     let dynamic_image = match img.color() {
         ColorType::Rgb8 | ColorType::Rgb16 | ColorType::Rgb32F => {
@@ -146,8 +143,8 @@ pub fn sepia(init_base64: &str, strength: f32) -> String {
     }
 
     let strength = strength.clamp(0.0, 1.0);
-    let base64 = prepare_base64(init_base64);
-    let image = base64_to_image(&base64);
+    let image = base64_to_image(init_base64);
+
     let extension = image::guess_format(&image).expect("Failed to guess format");
     let image = load_from_memory(&image).expect("Invalid image data");
 
@@ -163,8 +160,8 @@ pub fn invert(init_base64: &str) -> String {
         return "".to_string();
     }
 
-    let base64 = prepare_base64(init_base64);
-    let image = base64_to_image(&base64);
+    let image = base64_to_image(init_base64);
+
     let extension = image::guess_format(&image).expect("Failed to guess format");
     let mut image = load_from_memory(&image).expect("Invalid image data");
 
@@ -181,8 +178,8 @@ pub fn blur(init_base64: &str, strength: f32) -> String {
     }
 
     let strength = strength.clamp(0.0, 100.0);
-    let base64 = prepare_base64(init_base64);
-    let image = base64_to_image(&base64);
+    let image = base64_to_image(init_base64);
+
     let extension = image::guess_format(&image).expect("Failed to guess format");
     let image = load_from_memory(&image).expect("Invalid image data");
 
