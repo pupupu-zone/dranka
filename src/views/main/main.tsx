@@ -10,6 +10,7 @@ import Root, { Headers, Header, Main } from './main.styles';
 
 const MainView = () => {
 	const [action, setAction] = useState('');
+	const [isBarHidden, setIsBarHidden] = useState(false);
 
 	const fileReader = useRef(new FileReader());
 	const [imageToView, setImageToView] = useState('');
@@ -54,19 +55,21 @@ const MainView = () => {
 		}
 	}, [action, image64]);
 
+	const toggleBar = () => setIsBarHidden(image64 ? !isBarHidden : false);
+
 	return (
-		<MainContext.Provider value={{ image64, setAction, action }}>
+		<MainContext.Provider value={{ image64, isBarHidden, setAction, action }}>
 			<Root>
 				<Headers>
-					<Header as={Link} to="/filters" activeProps={{ className: 'active' }}>
+					<Header as={Link} to="/filters" activeProps={{ className: 'active' }} onClick={toggleBar}>
 						Filters
 					</Header>
 
-					<Header as={Link} to="/crop" activeProps={{ className: 'active' }}>
+					<Header as={Link} to="/crop" activeProps={{ className: 'active' }} onClick={toggleBar}>
 						Crop
 					</Header>
 
-					<Header as={Link} to="/merge" activeProps={{ className: 'active' }} disabled>
+					<Header as={Link} to="/merge" activeProps={{ className: 'active' }} onClick={toggleBar} disabled>
 						Merge
 					</Header>
 				</Headers>

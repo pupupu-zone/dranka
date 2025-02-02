@@ -31,9 +31,9 @@ const FILTERS = [
 ];
 
 const FilterActions = () => {
-	const { image64, setAction } = useContext(MainContext);
+	const { isBarHidden, image64, setAction } = useContext(MainContext);
 
-	if (!image64) {
+	if (!image64 || isBarHidden) {
 		return null;
 	}
 
