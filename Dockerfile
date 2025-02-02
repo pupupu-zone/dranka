@@ -10,7 +10,7 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 # build
-FROM node:20-alpine as build-stage
+FROM node:22-alpine as build-stage
 COPY --from=module-install-stage /app/node_modules/ /app/node_modules
 WORKDIR /app
 COPY . .
