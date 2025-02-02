@@ -3,7 +3,6 @@ use image::*;
 use regex::Regex;
 use std::io::Cursor;
 use wasm_bindgen::prelude::*;
-use web_sys::console;
 
 fn prepare_base64(init64: &str) -> String {
     let re = Regex::new("^data:image/[^;]+;base64,").expect("Invalid regex");
@@ -23,10 +22,10 @@ fn base64_to_image(base64: &str) -> Vec<u8> {
     image
 }
 
-fn to_base64(image: Vec<u8>) -> String {
+fn to_base64(image: Vec<u8>, extension: ImageFormat) -> String {
     let base64 = BASE64_STANDARD.encode(&image);
 
-    format!("data:image/webp;base64,{}", base64)
+    format!("data:{};base64,{}", extension.to_mime_type(), base64)
 }
 
 fn get_image(base64_img: &str) -> DynamicImage {
@@ -78,7 +77,7 @@ pub fn grayscale(init_base64: &str, strength: f32) -> String {
     let modified_image = adjust_grayscale(&image, strength);
     let new_image = create_image(modified_image, ImageFormat::WebP);
 
-    to_base64(new_image.into_inner())
+    to_base64(new_image.into_inner(), ImageFormat::WebP)
 }
 
 fn apply_sepia(img: &DynamicImage) -> DynamicImage {
@@ -135,7 +134,7 @@ pub fn sepia(init_base64: &str) -> String {
     let modified_image = apply_sepia(&image);
     let new_image = create_image(modified_image, ImageFormat::WebP);
 
-    to_base64(new_image.into_inner())
+    to_base64(new_image.into_inner(), ImageFormat::WebP)
 }
 
 #[wasm_bindgen]
@@ -148,7 +147,7 @@ pub fn invert(init_base64: &str) -> String {
     let modified_image = apply_invert(&image);
     let new_image = create_image(modified_image, ImageFormat::WebP);
 
-    to_base64(new_image.into_inner())
+    to_base64(new_image.into_inner(), ImageFormat::WebP)
 }
 
 #[wasm_bindgen]
@@ -165,5 +164,5 @@ pub fn blur(init_base64: &str, strength: f32) -> String {
     let modified_image = image.blur(strength);
     let new_image = create_image(modified_image, extension);
 
-    to_base64(new_image.into_inner())
+    to_base64(new_image.into_inner(), extension)
 }
