@@ -5,7 +5,7 @@ import MainContext from '@views/context';
 import Slider from './slider';
 import { HorizontalScroll } from '@ui';
 import FilterCard from '@shared/filter-card';
-import Root, { SliderWrap, Test, Scroll, InnerList } from './bw.styles';
+import Root, { SliderRoot, SliderWrap, Test, Scroll, InnerList } from './bw.styles';
 
 const FILTERS = [
 	{
@@ -33,9 +33,11 @@ const BWActions = () => {
 
 	return (
 		<Root>
-			<SliderWrap>
-				<Slider externalValue={strengths.grayscale} onChange={onChangeHd} />
-			</SliderWrap>
+			<SliderRoot>
+				<SliderWrap>
+					<Slider externalValue={strengths.grayscale} onChange={onChangeHd} />
+				</SliderWrap>
+			</SliderRoot>
 
 			<Test>
 				<HorizontalScroll as={Scroll}>

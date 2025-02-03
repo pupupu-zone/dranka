@@ -1,23 +1,26 @@
 import styled from 'styled-components';
 
+export const SliderRoot = styled.div`
+	display: grid;
+	grid-template-columns: 1fr;
+	width: 100%;
+	color: white;
+`;
+
 export const SliderWrap = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	justify-self: center;
-	width: 320px;
 	margin-top: 24px;
 	margin-bottom: 24px;
 	background-color: #5f5f5f60;
 	border-radius: 18px;
-
 	margin: 0;
-
-	margin-bottom: 24px;
-	height: 48px;
 	padding: 24px;
 	border-radius: 18px;
 	height: auto;
+	width: 320px;
 `;
 
 export default styled.div`
@@ -27,6 +30,9 @@ export default styled.div`
 	width: 100vw;
 	transform: translateX(-50%);
 	backdrop-filter: blur(2px);
+	display: grid;
+	grid-auto-flow: dense;
+	gap: 24px;
 `;
 
 export const InnerList = styled.div`
