@@ -21,7 +21,8 @@ const FILTERS = [
 ];
 
 const BWActions = () => {
-	const { originalImage64, toggleFilter, appliedFilters, setStrengths, strengths } = useContext(MainContext);
+	const { originalImage64, toggleFilter, appliedFilters, setStrengths, strengths, activeSlider, setActiveSlider } =
+		useContext(MainContext);
 
 	const onChangeHd = (strength: number) => {
 		setStrengths('grayscale', strength);
@@ -33,11 +34,13 @@ const BWActions = () => {
 
 	return (
 		<Root>
-			<SliderRoot>
-				<SliderWrap>
-					<Slider externalValue={strengths.grayscale} onChange={onChangeHd} />
-				</SliderWrap>
-			</SliderRoot>
+			{activeSlider === 'grayscale' && (
+				<SliderRoot>
+					<SliderWrap>
+						<Slider externalValue={strengths.grayscale} onChange={onChangeHd} />
+					</SliderWrap>
+				</SliderRoot>
+			)}
 
 			<Test>
 				<HorizontalScroll as={Scroll}>
@@ -48,6 +51,8 @@ const BWActions = () => {
 								isActive={appliedFilters.includes(filter.id)}
 								effectId={filter.id}
 								onPress={toggleFilter}
+								activeSlider={activeSlider}
+								onAdjustPress={setActiveSlider}
 								label={filter.label}
 							/>
 						))}

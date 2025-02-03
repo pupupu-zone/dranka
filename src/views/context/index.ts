@@ -17,6 +17,9 @@ type MainContextT = {
 		[key: string]: number;
 	};
 	setStrengths: (key: string, value: number) => void;
+
+	activeSlider: string;
+	setActiveSlider: (slider: string) => void;
 };
 
 const defaultContext: MainContextT = {
@@ -34,7 +37,9 @@ const defaultContext: MainContextT = {
 	strengths: {
 		grayscale: 100
 	},
-	setStrengths: () => {}
+	setStrengths: () => {},
+	activeSlider: '',
+	setActiveSlider: () => {}
 };
 
 const MainContext = createContext(defaultContext);

@@ -1,5 +1,27 @@
 import styled, { css } from 'styled-components';
 
+export const ActiveArea = styled.button`
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background-color: transparent;
+`;
+
+export const Edit = styled.span`
+	border: none;
+	color: var(--text-color);
+	font-weight: 500;
+	font-size: 14px;
+	background-color: var(--bg-color);
+	padding: 3px 12px 6px 12px;
+	border-radius: 8px;
+	font-variant-caps: all-petite-caps;
+`;
+
 export const Label = styled.label<{ $isActive: boolean }>`
 	color: ${({ $isActive }) => ($isActive ? 'var(--accent-yellow)' : 'var(--text-color)')};
 	font-weight: ${({ $isActive }) => ($isActive ? '700' : '500')};
@@ -10,7 +32,10 @@ export const Label = styled.label<{ $isActive: boolean }>`
 export const Preview = styled.div<{ $isActive: boolean }>`
 	width: 72px;
 	height: 72px;
+	margin: 0;
+	padding: 0;
 	overflow: hidden;
+	background-color: transparent;
 	border: 2px solid ${({ $isActive }) => ($isActive ? 'var(--accent-yellow)' : 'transparent')};
 	border-radius: 8px;
 `;
@@ -50,7 +75,7 @@ export const Img = styled.img<{ $effect: keyof typeof filters }>`
 	${({ $effect }) => filters[$effect] || filters.original};
 `;
 
-export default styled.button`
+export default styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 8px;

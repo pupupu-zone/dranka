@@ -10,6 +10,7 @@ import ImagePreview from './image-preview';
 import Root, { Headers, Header, HeadersInner, Main } from './main.styles';
 
 const MainView = () => {
+	const [activeSlider, setActiveSlider] = useState('');
 	const [strengths, setStrengths] = useState<{ [key: string]: number }>({
 		grayscale: 100
 	});
@@ -111,7 +112,9 @@ const MainView = () => {
 				toggleFilter,
 				applyFilters,
 				strengths,
-				setStrengths: setStr
+				setStrengths: setStr,
+				activeSlider,
+				setActiveSlider
 			}}
 		>
 			<Root>
