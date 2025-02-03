@@ -11,35 +11,36 @@ const ACTIONS = [
 		label: 'Reset',
 		type: 'action'
 	},
+
 	{
-		id: 'crop-free',
+		id: 'rotate-left',
+		label: 'Left',
+		type: 'action'
+	},
+	{
+		id: 'rotate-free',
 		label: 'Free',
 		type: 'action'
 	},
 	{
-		id: 'crop-11',
-		label: '1:1',
-		type: 'action'
-	},
-	{
-		id: 'crop-32',
-		label: '3:2',
-		type: 'action'
-	},
-	{
-		id: 'crop-43',
-		label: '4:3',
+		id: 'rotate-right',
+		label: 'Right',
 		type: 'action'
 	},
 
 	{
-		id: 'crop-54',
-		label: '5:4',
+		id: 'mirror-horizontal',
+		label: 'Mirror H',
+		type: 'action'
+	},
+	{
+		id: 'mirror-vertical',
+		label: 'Mirror V',
 		type: 'action'
 	}
 ];
 
-const CropActions = () => {
+const RotateActions = () => {
 	const { originalImage64, toggleFilter, appliedFilters } = useContext(MainContext);
 
 	if (!originalImage64) {
@@ -61,4 +62,4 @@ const CropActions = () => {
 	);
 };
 
-export default CropActions;
+export default RotateActions;

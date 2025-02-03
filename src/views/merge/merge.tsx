@@ -11,35 +11,20 @@ const ACTIONS = [
 		label: 'Reset',
 		type: 'action'
 	},
-	{
-		id: 'crop-free',
-		label: 'Free',
-		type: 'action'
-	},
-	{
-		id: 'crop-11',
-		label: '1:1',
-		type: 'action'
-	},
-	{
-		id: 'crop-32',
-		label: '3:2',
-		type: 'action'
-	},
-	{
-		id: 'crop-43',
-		label: '4:3',
-		type: 'action'
-	},
 
 	{
-		id: 'crop-54',
-		label: '5:4',
+		id: 'merge-add',
+		label: 'Add',
+		type: 'action'
+	},
+	{
+		id: 'merge-delete',
+		label: 'Delete',
 		type: 'action'
 	}
 ];
 
-const CropActions = () => {
+const MergeActions = () => {
 	const { originalImage64, toggleFilter, appliedFilters } = useContext(MainContext);
 
 	if (!originalImage64) {
@@ -61,4 +46,4 @@ const CropActions = () => {
 	);
 };
 
-export default CropActions;
+export default MergeActions;

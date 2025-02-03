@@ -8,19 +8,23 @@ import FiltersList from '@shared/filters-list';
 const FILTERS = [
 	{
 		id: 'original',
-		label: 'Original'
+		label: 'Original',
+		type: 'filter'
 	},
 	{
 		id: 'invert',
-		label: 'Invert'
+		label: 'Invert',
+		type: 'filter'
 	},
 	{
 		id: 'sepia',
-		label: 'Sepia'
+		label: 'Sepia',
+		type: 'filter'
 	},
 	{
 		id: 'blur',
-		label: 'Blur'
+		label: 'Blur',
+		type: 'filter'
 	}
 ];
 

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Label = styled.label<{ $isActive: boolean }>`
 	color: ${({ $isActive }) => ($isActive ? 'var(--accent-yellow)' : 'var(--text-color)')};
@@ -15,17 +15,39 @@ export const Preview = styled.div<{ $isActive: boolean }>`
 	border-radius: 8px;
 `;
 
-export const Img = styled.img<{ $effect: string }>`
-	--grayscale: grayscale(1);
-	--invert: invert(1);
-	--sepia: sepia(1);
-	--blur: blur(2px);
-	--hue: hue-rotate(90deg);
+const filters = {
+	original: 'none',
+	'rotate-left': css`
+		transform: rotate(-90deg);
+	`,
+	'rotate-right': css`
+		transform: rotate(90deg);
+	`,
+	'mirror-horizontal': css`
+		transform: scaleX(-1);
+	`,
+	'mirror-vertical': css`
+		transform: scaleY(-1);
+	`,
+	grayscale: css`
+		filter: grayscale(1);
+	`,
+	invert: css`
+		filter: invert(1);
+	`,
+	sepia: css`
+		filter: sepia(1);
+	`,
+	blur: css`
+		filter: blur(2px);
+	`
+};
 
+export const Img = styled.img<{ $effect: keyof typeof filters }>`
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	filter: ${({ $effect }) => `var(--${$effect})`};
+	${({ $effect }) => filters[$effect] || filters.original};
 `;
 
 export default styled.button`

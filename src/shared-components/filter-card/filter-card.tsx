@@ -13,6 +13,7 @@ const FilterCard = ({ onPress, effectId, label, isActive }: Props) => {
 	return (
 		<Root as={AriaButton} onPress={onPressHd}>
 			<Preview $isActive={isActive}>
+				{/* @ts-ignore */}
 				<Img src={previewImg} alt="Preview" $effect={effectId} />
 			</Preview>
 

@@ -114,6 +114,18 @@ const MainView = () => {
 								Effects
 							</Header>
 
+							<Header as={Link} to="/rotate" activeProps={{ className: 'active' }}>
+								Rotate
+							</Header>
+
+							<Header as={Link} to="/crop" activeProps={{ className: 'active' }}>
+								Crop
+							</Header>
+
+							<Header as={Link} to="/merge" activeProps={{ className: 'active' }}>
+								Merge
+							</Header>
+
 							<Header as={Link} to="/export" activeProps={{ className: 'active' }}>
 								Export
 							</Header>

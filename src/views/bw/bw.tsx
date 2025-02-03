@@ -8,11 +8,13 @@ import FiltersList from '@shared/filters-list';
 const FILTERS = [
 	{
 		id: 'original',
-		label: 'Original'
+		label: 'Original',
+		type: 'filter'
 	},
 	{
 		id: 'grayscale',
-		label: 'Grayscale'
+		label: 'Grayscale',
+		type: 'filter'
 	}
 ];
 
