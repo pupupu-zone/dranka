@@ -10,6 +10,9 @@ import ImagePreview from './image-preview';
 import Root, { Headers, Header, HeadersInner, Main } from './main.styles';
 
 const MainView = () => {
+	const [strengths, setStrengths] = useState<{ [key: string]: number }>({
+		grayscale: 100
+	});
 	const [action, setAction] = useState('');
 	const [filters, setFilters] = useState<string[]>([]);
 
@@ -33,13 +36,20 @@ const MainView = () => {
 		const modifiedImage = applyFilters(filters, compressedImage64);
 
 		setPreviewImage64(modifiedImage);
-	}, [filters, compressedImage64]);
+	}, [filters, compressedImage64, strengths.grayscale]);
+
+	const setStr = (key: string, value: number) => {
+		setStrengths({
+			...strengths,
+			[key]: value
+		});
+	};
 
 	const applyFilters = (filters: string[], imageToModify: string) => {
 		let modifiedImage = imageToModify;
 
 		if (filters.includes('grayscale')) {
-			const grayImage64 = grayscale(modifiedImage, 1);
+			const grayImage64 = grayscale(modifiedImage, strengths.grayscale / 100);
 
 			modifiedImage = grayImage64;
 		}
@@ -99,7 +109,9 @@ const MainView = () => {
 				appliedFilters: filters,
 				resetFilters,
 				toggleFilter,
-				applyFilters
+				applyFilters,
+				strengths,
+				setStrengths: setStr
 			}}
 		>
 			<Root>

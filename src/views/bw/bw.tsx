@@ -2,8 +2,10 @@ import React, { useContext } from 'react';
 
 import MainContext from '@views/context';
 
+import Slider from './slider';
+import { HorizontalScroll } from '@ui';
 import FilterCard from '@shared/filter-card';
-import FiltersList from '@shared/filters-list';
+import Root, { SliderWrap, Test, Scroll, InnerList } from './bw.styles';
 
 const FILTERS = [
 	{
@@ -19,24 +21,38 @@ const FILTERS = [
 ];
 
 const BWActions = () => {
-	const { originalImage64, toggleFilter, appliedFilters } = useContext(MainContext);
+	const { originalImage64, toggleFilter, appliedFilters, setStrengths, strengths } = useContext(MainContext);
+
+	const onChangeHd = (strength: number) => {
+		setStrengths('grayscale', strength);
+	};
 
 	if (!originalImage64) {
 		return null;
 	}
 
 	return (
-		<FiltersList>
-			{FILTERS.map((filter) => (
-				<FilterCard
-					key={filter.id}
-					isActive={appliedFilters.includes(filter.id)}
-					effectId={filter.id}
-					onPress={toggleFilter}
-					label={filter.label}
-				/>
-			))}
-		</FiltersList>
+		<Root>
+			<SliderWrap>
+				<Slider externalValue={strengths.grayscale} onChange={onChangeHd} />
+			</SliderWrap>
+
+			<Test>
+				<HorizontalScroll as={Scroll}>
+					<InnerList>
+						{FILTERS.map((filter) => (
+							<FilterCard
+								key={filter.id}
+								isActive={appliedFilters.includes(filter.id)}
+								effectId={filter.id}
+								onPress={toggleFilter}
+								label={filter.label}
+							/>
+						))}
+					</InnerList>
+				</HorizontalScroll>
+			</Test>
+		</Root>
 	);
 };
 

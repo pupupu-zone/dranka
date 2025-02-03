@@ -12,6 +12,11 @@ type MainContextT = {
 	removeFilter: (filter: string) => void;
 	resetFilters: () => void;
 	toggleFilter: (filterId: string) => void;
+
+	strengths: {
+		[key: string]: number;
+	};
+	setStrengths: (key: string, value: number) => void;
 };
 
 const defaultContext: MainContextT = {
@@ -25,7 +30,11 @@ const defaultContext: MainContextT = {
 	addFilter: () => {},
 	removeFilter: () => {},
 	resetFilters: () => {},
-	toggleFilter: () => {}
+	toggleFilter: () => {},
+	strengths: {
+		grayscale: 100
+	},
+	setStrengths: () => {}
 };
 
 const MainContext = createContext(defaultContext);
