@@ -1,4 +1,4 @@
-use image::*;
+use image::{ColorType, DynamicImage, ImageBuffer, Rgb, Rgba};
 use wasm_bindgen::prelude::*;
 
 use crate::utils;
@@ -10,15 +10,15 @@ pub fn sepia(init_base64: &str, strength: f32) -> String {
     }
 
     let strength = strength.clamp(0.0, 1.0);
-    let image = utils::base64_to_image(init_base64);
 
-    let extension = image::guess_format(&image).expect("Failed to guess format");
-    let image = load_from_memory(&image).expect("Invalid image data");
+    let img_vector = utils::base64_to_vec(&init_base64);
+    let loaded_img = image::load_from_memory(&img_vector).expect("Invalid image data");
+    let image_with_filter = apply_sepia(&loaded_img, strength);
 
-    let modified_image = apply_sepia(&image, strength);
-    let new_image = utils::create_image(modified_image, extension);
+    let extension = image::guess_format(&img_vector).expect("Failed to guess format");
+    let image_to_send = utils::create_image(image_with_filter, extension);
 
-    utils::to_base64(new_image.into_inner(), extension)
+    utils::vec_to_base64(image_to_send.into_inner(), extension)
 }
 
 fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
