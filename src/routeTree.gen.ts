@@ -11,25 +11,27 @@
 // Import Routes
 
 import { Route as rootRoute } from './core/routes/__root'
-import { Route as MergeRouteImport } from './core/routes/merge/route'
-import { Route as FiltersRouteImport } from './core/routes/filters/route'
+import { Route as ExportRouteImport } from './core/routes/export/route'
+import { Route as EffectsRouteImport } from './core/routes/effects/route'
 import { Route as CropRouteImport } from './core/routes/crop/route'
+import { Route as BwRouteImport } from './core/routes/bw/route'
 import { Route as IndexImport } from './core/routes/index'
-import { Route as MergeIndexImport } from './core/routes/merge/index'
-import { Route as FiltersIndexImport } from './core/routes/filters/index'
+import { Route as ExportIndexImport } from './core/routes/export/index'
+import { Route as EffectsIndexImport } from './core/routes/effects/index'
 import { Route as CropIndexImport } from './core/routes/crop/index'
+import { Route as BwIndexImport } from './core/routes/bw/index'
 
 // Create/Update Routes
 
-const MergeRouteRoute = MergeRouteImport.update({
-  id: '/merge',
-  path: '/merge',
+const ExportRouteRoute = ExportRouteImport.update({
+  id: '/export',
+  path: '/export',
   getParentRoute: () => rootRoute,
 } as any)
 
-const FiltersRouteRoute = FiltersRouteImport.update({
-  id: '/filters',
-  path: '/filters',
+const EffectsRouteRoute = EffectsRouteImport.update({
+  id: '/effects',
+  path: '/effects',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,28 +41,40 @@ const CropRouteRoute = CropRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const BwRouteRoute = BwRouteImport.update({
+  id: '/bw',
+  path: '/bw',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const MergeIndexRoute = MergeIndexImport.update({
+const ExportIndexRoute = ExportIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => MergeRouteRoute,
+  getParentRoute: () => ExportRouteRoute,
 } as any)
 
-const FiltersIndexRoute = FiltersIndexImport.update({
+const EffectsIndexRoute = EffectsIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => FiltersRouteRoute,
+  getParentRoute: () => EffectsRouteRoute,
 } as any)
 
 const CropIndexRoute = CropIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => CropRouteRoute,
+} as any)
+
+const BwIndexRoute = BwIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BwRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -74,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/bw': {
+      id: '/bw'
+      path: '/bw'
+      fullPath: '/bw'
+      preLoaderRoute: typeof BwRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/crop': {
       id: '/crop'
       path: '/crop'
@@ -81,19 +102,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CropRouteImport
       parentRoute: typeof rootRoute
     }
-    '/filters': {
-      id: '/filters'
-      path: '/filters'
-      fullPath: '/filters'
-      preLoaderRoute: typeof FiltersRouteImport
+    '/effects': {
+      id: '/effects'
+      path: '/effects'
+      fullPath: '/effects'
+      preLoaderRoute: typeof EffectsRouteImport
       parentRoute: typeof rootRoute
     }
-    '/merge': {
-      id: '/merge'
-      path: '/merge'
-      fullPath: '/merge'
-      preLoaderRoute: typeof MergeRouteImport
+    '/export': {
+      id: '/export'
+      path: '/export'
+      fullPath: '/export'
+      preLoaderRoute: typeof ExportRouteImport
       parentRoute: typeof rootRoute
+    }
+    '/bw/': {
+      id: '/bw/'
+      path: '/'
+      fullPath: '/bw/'
+      preLoaderRoute: typeof BwIndexImport
+      parentRoute: typeof BwRouteImport
     }
     '/crop/': {
       id: '/crop/'
@@ -102,24 +130,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CropIndexImport
       parentRoute: typeof CropRouteImport
     }
-    '/filters/': {
-      id: '/filters/'
+    '/effects/': {
+      id: '/effects/'
       path: '/'
-      fullPath: '/filters/'
-      preLoaderRoute: typeof FiltersIndexImport
-      parentRoute: typeof FiltersRouteImport
+      fullPath: '/effects/'
+      preLoaderRoute: typeof EffectsIndexImport
+      parentRoute: typeof EffectsRouteImport
     }
-    '/merge/': {
-      id: '/merge/'
+    '/export/': {
+      id: '/export/'
       path: '/'
-      fullPath: '/merge/'
-      preLoaderRoute: typeof MergeIndexImport
-      parentRoute: typeof MergeRouteImport
+      fullPath: '/export/'
+      preLoaderRoute: typeof ExportIndexImport
+      parentRoute: typeof ExportRouteImport
     }
   }
 }
 
 // Create and export the route tree
+
+interface BwRouteRouteChildren {
+  BwIndexRoute: typeof BwIndexRoute
+}
+
+const BwRouteRouteChildren: BwRouteRouteChildren = {
+  BwIndexRoute: BwIndexRoute,
+}
+
+const BwRouteRouteWithChildren =
+  BwRouteRoute._addFileChildren(BwRouteRouteChildren)
 
 interface CropRouteRouteChildren {
   CropIndexRoute: typeof CropIndexRoute
@@ -133,94 +172,105 @@ const CropRouteRouteWithChildren = CropRouteRoute._addFileChildren(
   CropRouteRouteChildren,
 )
 
-interface FiltersRouteRouteChildren {
-  FiltersIndexRoute: typeof FiltersIndexRoute
+interface EffectsRouteRouteChildren {
+  EffectsIndexRoute: typeof EffectsIndexRoute
 }
 
-const FiltersRouteRouteChildren: FiltersRouteRouteChildren = {
-  FiltersIndexRoute: FiltersIndexRoute,
+const EffectsRouteRouteChildren: EffectsRouteRouteChildren = {
+  EffectsIndexRoute: EffectsIndexRoute,
 }
 
-const FiltersRouteRouteWithChildren = FiltersRouteRoute._addFileChildren(
-  FiltersRouteRouteChildren,
+const EffectsRouteRouteWithChildren = EffectsRouteRoute._addFileChildren(
+  EffectsRouteRouteChildren,
 )
 
-interface MergeRouteRouteChildren {
-  MergeIndexRoute: typeof MergeIndexRoute
+interface ExportRouteRouteChildren {
+  ExportIndexRoute: typeof ExportIndexRoute
 }
 
-const MergeRouteRouteChildren: MergeRouteRouteChildren = {
-  MergeIndexRoute: MergeIndexRoute,
+const ExportRouteRouteChildren: ExportRouteRouteChildren = {
+  ExportIndexRoute: ExportIndexRoute,
 }
 
-const MergeRouteRouteWithChildren = MergeRouteRoute._addFileChildren(
-  MergeRouteRouteChildren,
+const ExportRouteRouteWithChildren = ExportRouteRoute._addFileChildren(
+  ExportRouteRouteChildren,
 )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bw': typeof BwRouteRouteWithChildren
   '/crop': typeof CropRouteRouteWithChildren
-  '/filters': typeof FiltersRouteRouteWithChildren
-  '/merge': typeof MergeRouteRouteWithChildren
+  '/effects': typeof EffectsRouteRouteWithChildren
+  '/export': typeof ExportRouteRouteWithChildren
+  '/bw/': typeof BwIndexRoute
   '/crop/': typeof CropIndexRoute
-  '/filters/': typeof FiltersIndexRoute
-  '/merge/': typeof MergeIndexRoute
+  '/effects/': typeof EffectsIndexRoute
+  '/export/': typeof ExportIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bw': typeof BwIndexRoute
   '/crop': typeof CropIndexRoute
-  '/filters': typeof FiltersIndexRoute
-  '/merge': typeof MergeIndexRoute
+  '/effects': typeof EffectsIndexRoute
+  '/export': typeof ExportIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/bw': typeof BwRouteRouteWithChildren
   '/crop': typeof CropRouteRouteWithChildren
-  '/filters': typeof FiltersRouteRouteWithChildren
-  '/merge': typeof MergeRouteRouteWithChildren
+  '/effects': typeof EffectsRouteRouteWithChildren
+  '/export': typeof ExportRouteRouteWithChildren
+  '/bw/': typeof BwIndexRoute
   '/crop/': typeof CropIndexRoute
-  '/filters/': typeof FiltersIndexRoute
-  '/merge/': typeof MergeIndexRoute
+  '/effects/': typeof EffectsIndexRoute
+  '/export/': typeof ExportIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bw'
     | '/crop'
-    | '/filters'
-    | '/merge'
+    | '/effects'
+    | '/export'
+    | '/bw/'
     | '/crop/'
-    | '/filters/'
-    | '/merge/'
+    | '/effects/'
+    | '/export/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/crop' | '/filters' | '/merge'
+  to: '/' | '/bw' | '/crop' | '/effects' | '/export'
   id:
     | '__root__'
     | '/'
+    | '/bw'
     | '/crop'
-    | '/filters'
-    | '/merge'
+    | '/effects'
+    | '/export'
+    | '/bw/'
     | '/crop/'
-    | '/filters/'
-    | '/merge/'
+    | '/effects/'
+    | '/export/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BwRouteRoute: typeof BwRouteRouteWithChildren
   CropRouteRoute: typeof CropRouteRouteWithChildren
-  FiltersRouteRoute: typeof FiltersRouteRouteWithChildren
-  MergeRouteRoute: typeof MergeRouteRouteWithChildren
+  EffectsRouteRoute: typeof EffectsRouteRouteWithChildren
+  ExportRouteRoute: typeof ExportRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BwRouteRoute: BwRouteRouteWithChildren,
   CropRouteRoute: CropRouteRouteWithChildren,
-  FiltersRouteRoute: FiltersRouteRouteWithChildren,
-  MergeRouteRoute: MergeRouteRouteWithChildren,
+  EffectsRouteRoute: EffectsRouteRouteWithChildren,
+  ExportRouteRoute: ExportRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -234,13 +284,20 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/bw",
         "/crop",
-        "/filters",
-        "/merge"
+        "/effects",
+        "/export"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/bw": {
+      "filePath": "bw/route.tsx",
+      "children": [
+        "/bw/"
+      ]
     },
     "/crop": {
       "filePath": "crop/route.tsx",
@@ -248,29 +305,33 @@ export const routeTree = rootRoute
         "/crop/"
       ]
     },
-    "/filters": {
-      "filePath": "filters/route.tsx",
+    "/effects": {
+      "filePath": "effects/route.tsx",
       "children": [
-        "/filters/"
+        "/effects/"
       ]
     },
-    "/merge": {
-      "filePath": "merge/route.tsx",
+    "/export": {
+      "filePath": "export/route.tsx",
       "children": [
-        "/merge/"
+        "/export/"
       ]
+    },
+    "/bw/": {
+      "filePath": "bw/index.tsx",
+      "parent": "/bw"
     },
     "/crop/": {
       "filePath": "crop/index.tsx",
       "parent": "/crop"
     },
-    "/filters/": {
-      "filePath": "filters/index.tsx",
-      "parent": "/filters"
+    "/effects/": {
+      "filePath": "effects/index.tsx",
+      "parent": "/effects"
     },
-    "/merge/": {
-      "filePath": "merge/index.tsx",
-      "parent": "/merge"
+    "/export/": {
+      "filePath": "export/index.tsx",
+      "parent": "/export"
     }
   }
 }

@@ -4,13 +4,14 @@ import { Link, Outlet } from '@tanstack/react-router';
 import MainContext from '@views/context';
 import { grayscale, invert, sepia, blur } from '@wasm/dranka';
 
+import { HorizontalScroll } from '@ui';
 import UploadImage from './upload-image';
 import ImagePreview from './image-preview';
-import Root, { Headers, Header, Main } from './main.styles';
+import Root, { Headers, Header, HeadersInner, Main } from './main.styles';
 
 const MainView = () => {
 	const [action, setAction] = useState('');
-	const [isBarHidden, setIsBarHidden] = useState(false);
+	const [isBarHidden] = useState(false);
 
 	const fileReader = useRef(new FileReader());
 	const [imageToView, setImageToView] = useState('');
@@ -55,23 +56,27 @@ const MainView = () => {
 		}
 	}, [action, image64]);
 
-	const toggleBar = () => setIsBarHidden(image64 ? !isBarHidden : false);
+	// const toggleBar = () => setIsBarHidden(image64 ? !isBarHidden : false);
 
 	return (
 		<MainContext.Provider value={{ image64, isBarHidden, setAction, action }}>
 			<Root>
 				<Headers>
-					<Header as={Link} to="/filters" activeProps={{ className: 'active' }} onClick={toggleBar}>
-						Filters
-					</Header>
+					<HorizontalScroll>
+						<HeadersInner>
+							<Header as={Link} to="/bw" activeProps={{ className: 'active' }}>
+								B&W
+							</Header>
 
-					<Header as={Link} to="/crop" activeProps={{ className: 'active' }} onClick={toggleBar}>
-						Crop
-					</Header>
+							<Header as={Link} to="/effects" activeProps={{ className: 'active' }}>
+								Effects
+							</Header>
 
-					<Header as={Link} to="/merge" activeProps={{ className: 'active' }} onClick={toggleBar} disabled>
-						Merge
-					</Header>
+							<Header as={Link} to="/export" activeProps={{ className: 'active' }}>
+								Export
+							</Header>
+						</HeadersInner>
+					</HorizontalScroll>
 				</Headers>
 
 				<Main>

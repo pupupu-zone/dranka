@@ -59,7 +59,9 @@
       "@wasm/*": ["./public/wasm/*"],
 
       "@views": ["./src/views/index"],
-      "@views/*": ["./src/views/*"]
+      "@views/*": ["./src/views/*"],
+
+      "@shared/*": ["./src/shared-components/*"]
     }
   },
   "include": ["src"],

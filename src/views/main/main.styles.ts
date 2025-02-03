@@ -11,15 +11,18 @@ export const Header = styled.h1`
 	}
 `;
 
-export const Headers = styled.header`
-	display: flex;
-	grid-area: header;
+export const HeadersInner = styled.p`
+	display: grid;
+	grid-auto-flow: column;
 	gap: 18px;
 	justify-content: flex-start;
 `;
 
+export const Headers = styled.header`
+	width: 100%;
+`;
+
 export const Aside = styled.aside`
-	grid-area: sidebar;
 	width: 20vw;
 	height: 128px;
 	background-color: var(--accent);
@@ -27,16 +30,15 @@ export const Aside = styled.aside`
 
 export const Main = styled.main`
 	display: flex;
-	grid-area: main;
 	justify-content: center;
+	width: 100%;
 `;
 
 export default styled.div`
 	display: grid;
-	grid-template:
-		'header' min-content
-		'main' min-content
-		/ 1fr;
+	grid-auto-rows: min-content min-content;
+	grid-auto-columns: calc(100vw - 48px);
+	grid-auto-flow: row;
 	gap: 24px;
 	margin-top: calc(env(safe-area-inset-top) + 24px);
 	margin-right: 24px;
