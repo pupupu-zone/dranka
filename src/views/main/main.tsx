@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, Outlet } from '@tanstack/react-router';
 
 import MainContext from '@views/context';
-import { grayscale, invert, sepia, blur } from '@wasm/dranka';
+import { grayscale, invert, sepia, blur, minify_image } from '@wasm/dranka';
 
 import { HorizontalScroll } from '@ui';
 import UploadImage from './upload-image';
@@ -16,20 +16,29 @@ const MainView = () => {
 	const [filters, setFilters] = useState<string[]>([]);
 
 	const fileReader = useRef(new FileReader());
-	const [imageToView, setImageToView] = useState('');
-	const [image64, setImage64] = useState('');
+	const [compressedImage64, setCompressedImage64] = useState('');
+	const [originalImage64, setOriginalImage64] = useState('');
+	const [previewImage64, setPreviewImage64] = useState('');
 
 	useEffect(() => {
 		fileReader.current.onloadend = () => {
 			const result = fileReader.current.result as string;
 
-			setImage64(result);
-			setImageToView(result);
+			setOriginalImage64(result);
+
+			const minified = minify_image(result);
+			setCompressedImage64(minified);
 		};
 	}, []);
 
 	useEffect(() => {
-		let modifiedImage = image64;
+		const modifiedImage = applyFilters(filters, compressedImage64);
+
+		setPreviewImage64(modifiedImage);
+	}, [filters, compressedImage64]);
+
+	const applyFilters = (filters: string[], imageToModify: string) => {
+		let modifiedImage = imageToModify;
 
 		if (filters.includes('grayscale')) {
 			const grayImage64 = grayscale(modifiedImage, 1);
@@ -55,8 +64,8 @@ const MainView = () => {
 			modifiedImage = blurImage;
 		}
 
-		setImageToView(modifiedImage);
-	}, [filters, image64]);
+		return modifiedImage;
+	};
 
 	const addFilter = (filter: string) => {
 		setFilters(Array.from(new Set([...filters, filter])));
@@ -83,15 +92,16 @@ const MainView = () => {
 	return (
 		<MainContext.Provider
 			value={{
-				image64,
-				imageToView,
+				originalImage64,
+				previewImage64,
 				setAction,
 				action,
 				addFilter,
 				removeFilter,
 				appliedFilters: filters,
 				resetFilters,
-				toggleFilter
+				toggleFilter,
+				applyFilters
 			}}
 		>
 			<Root>
@@ -114,9 +124,9 @@ const MainView = () => {
 				</Headers>
 
 				<Main>
-					{image64 && <ImagePreview image64={imageToView} />}
+					{originalImage64 && <ImagePreview />}
 
-					{!image64 && <UploadImage fileReader={fileReader.current} />}
+					{!originalImage64 && <UploadImage fileReader={fileReader.current} />}
 				</Main>
 
 				<Outlet />

@@ -25,9 +25,9 @@ const FILTERS = [
 ];
 
 const EffectsActions = () => {
-	const { image64, toggleFilter, appliedFilters } = useContext(MainContext);
+	const { originalImage64, toggleFilter, appliedFilters } = useContext(MainContext);
 
-	if (!image64) {
+	if (!originalImage64) {
 		return null;
 	}
 

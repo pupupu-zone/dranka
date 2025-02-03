@@ -1,10 +1,11 @@
 import { createContext } from 'react';
 
 type MainContextT = {
-	image64: string;
-	imageToView: string;
+	originalImage64: string;
+	previewImage64: string;
 	action: string;
 	setAction: (action: string) => void;
+	applyFilters: (filters: string[], image: string) => string;
 
 	appliedFilters: string[];
 	addFilter: (filter: string) => void;
@@ -14,10 +15,11 @@ type MainContextT = {
 };
 
 const defaultContext: MainContextT = {
-	image64: '',
-	imageToView: '',
+	originalImage64: '',
+	previewImage64: '',
 	action: '',
 	setAction: () => {},
+	applyFilters: () => '',
 
 	appliedFilters: [],
 	addFilter: () => {},

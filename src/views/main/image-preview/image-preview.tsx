@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 
+import MainContext from '@views/context';
 import Root, { Canvas } from './image-preview.styles';
-import type { Props } from './image-preview.d';
 
-const ImagePreview = ({ image64 }: Props) => {
+const ImagePreview = () => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const { previewImage64 } = useContext(MainContext);
 
 	useEffect(() => {
-		if (!image64) return;
+		if (!previewImage64) return;
 
 		const canvas = canvasRef.current;
 		if (!canvas) return;
@@ -31,8 +32,8 @@ const ImagePreview = ({ image64 }: Props) => {
 			ctx.fillText('Error', 10, 50);
 		};
 
-		image.src = image64;
-	}, [canvasRef, image64]);
+		image.src = previewImage64;
+	}, [canvasRef, previewImage64]);
 
 	return (
 		<Root>
