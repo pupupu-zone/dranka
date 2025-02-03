@@ -19,6 +19,7 @@
   "dependencies": {
     "@tanstack/react-router": "^1.99.0",
     "@tanstack/router-plugin": "^1.99.0",
+    "mime-types": "^2.1.35",
     "react": "^19.0.0",
     "react-aria": "^3.37.0",
     "react-aria-components": "^1.6.0",

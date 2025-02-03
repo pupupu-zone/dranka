@@ -2,6 +2,7 @@ import { createContext } from 'react';
 
 type MainContextT = {
 	image64: string;
+	imageToView: string;
 	isBarHidden: boolean;
 	action: string;
 	setAction: (action: string) => void;
@@ -9,6 +10,7 @@ type MainContextT = {
 
 const defaultContext: MainContextT = {
 	image64: '',
+	imageToView: '',
 	isBarHidden: false,
 	action: '',
 	setAction: () => {}

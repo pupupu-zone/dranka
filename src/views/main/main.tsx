@@ -59,7 +59,7 @@ const MainView = () => {
 	// const toggleBar = () => setIsBarHidden(image64 ? !isBarHidden : false);
 
 	return (
-		<MainContext.Provider value={{ image64, isBarHidden, setAction, action }}>
+		<MainContext.Provider value={{ image64, imageToView, isBarHidden, setAction, action }}>
 			<Root>
 				<Headers>
 					<HorizontalScroll>

@@ -28,7 +28,7 @@ const ImagePreview = ({ image64 }: Props) => {
 			console.error('Error loading image:', err);
 			ctx.fillStyle = 'red';
 			ctx.font = '14px Arial';
-			ctx.fillText('Error loading image', 10, 50);
+			ctx.fillText('Error', 10, 50);
 		};
 
 		image.src = image64;
