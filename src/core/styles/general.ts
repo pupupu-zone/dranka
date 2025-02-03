@@ -8,6 +8,7 @@ const General = createGlobalStyle`
 
 		--bg-color: #2A2A2A;
 		--accent: #8CC5C5;
+		--accent-yellow: #E6E699;
 		--popup-bg: #fefefe;
 		--text-color: #fefefe;
 

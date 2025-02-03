@@ -25,16 +25,22 @@ const FILTERS = [
 ];
 
 const EffectsActions = () => {
-	const { isBarHidden, image64, setAction } = useContext(MainContext);
+	const { image64, toggleFilter, appliedFilters } = useContext(MainContext);
 
-	if (!image64 || isBarHidden) {
+	if (!image64) {
 		return null;
 	}
 
 	return (
 		<FiltersList>
 			{FILTERS.map((filter) => (
-				<FilterCard key={filter.id} effectId={filter.id} onPress={setAction} label={filter.label} />
+				<FilterCard
+					key={filter.id}
+					isActive={appliedFilters.includes(filter.id)}
+					effectId={filter.id}
+					onPress={toggleFilter}
+					label={filter.label}
+				/>
 			))}
 		</FiltersList>
 	);

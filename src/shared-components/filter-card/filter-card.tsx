@@ -7,16 +7,16 @@ import Root, { Label, Preview, Img } from './filter-card.styles';
 
 import type { Props } from './filter-card.d';
 
-const FilterCard = ({ onPress, effectId, label }: Props) => {
+const FilterCard = ({ onPress, effectId, label, isActive }: Props) => {
 	const onPressHd = () => onPress(effectId);
 
 	return (
 		<Root as={AriaButton} onPress={onPressHd}>
-			<Preview>
+			<Preview $isActive={isActive}>
 				<Img src={previewImg} alt="Preview" $effect={effectId} />
 			</Preview>
 
-			<Label>{label}</Label>
+			<Label $isActive={isActive}>{label}</Label>
 		</Root>
 	);
 };

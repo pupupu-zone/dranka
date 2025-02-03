@@ -10,8 +10,10 @@ import ImagePreview from './image-preview';
 import Root, { Headers, Header, HeadersInner, Main } from './main.styles';
 
 const MainView = () => {
+	// @TODO: Use diff to apply new effects,
+	// do not reproduce each time all the effects
 	const [action, setAction] = useState('');
-	const [isBarHidden] = useState(false);
+	const [filters, setFilters] = useState<string[]>([]);
 
 	const fileReader = useRef(new FileReader());
 	const [imageToView, setImageToView] = useState('');
@@ -27,39 +29,71 @@ const MainView = () => {
 	}, []);
 
 	useEffect(() => {
-		if (action === 'original') {
-			setImageToView(image64);
+		let modifiedImage = image64;
+
+		if (filters.includes('grayscale')) {
+			const grayImage64 = grayscale(modifiedImage, 1);
+
+			modifiedImage = grayImage64;
 		}
 
-		if (action === 'grayscale') {
-			const grayImage64 = grayscale(image64, 1);
+		if (filters.includes('invert')) {
+			const invertImage = invert(modifiedImage);
 
-			setImageToView(grayImage64);
+			modifiedImage = invertImage;
 		}
 
-		if (action === 'invert') {
-			const invertImage = invert(image64);
+		if (filters.includes('sepia')) {
+			const sepiaImage = sepia(modifiedImage, 1);
 
-			setImageToView(invertImage);
+			modifiedImage = sepiaImage;
 		}
 
-		if (action === 'sepia') {
-			const sepiaImage = sepia(image64, 1);
+		if (filters.includes('blur')) {
+			const blurImage = blur(modifiedImage, 10);
 
-			setImageToView(sepiaImage);
+			modifiedImage = blurImage;
 		}
 
-		if (action === 'blur') {
-			const blurImage = blur(image64, 10);
+		setImageToView(modifiedImage);
+	}, [filters, image64]);
 
-			setImageToView(blurImage);
+	const addFilter = (filter: string) => {
+		setFilters(Array.from(new Set([...filters, filter])));
+	};
+
+	const removeFilter = (filter: string) => {
+		setFilters(filters.filter((f) => f !== filter));
+	};
+
+	const resetFilters = () => {
+		setFilters([]);
+	};
+
+	const toggleFilter = (filterId: string) => {
+		if (filterId === 'original') {
+			resetFilters();
+		} else if (filters.includes(filterId)) {
+			removeFilter(filterId);
+		} else {
+			addFilter(filterId);
 		}
-	}, [action, image64]);
-
-	// const toggleBar = () => setIsBarHidden(image64 ? !isBarHidden : false);
+	};
 
 	return (
-		<MainContext.Provider value={{ image64, imageToView, isBarHidden, setAction, action }}>
+		<MainContext.Provider
+			value={{
+				image64,
+				imageToView,
+				setAction,
+				action,
+				addFilter,
+				removeFilter,
+				appliedFilters: filters,
+				resetFilters,
+				toggleFilter
+			}}
+		>
 			<Root>
 				<Headers>
 					<HorizontalScroll>
