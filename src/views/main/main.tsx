@@ -10,8 +10,6 @@ import ImagePreview from './image-preview';
 import Root, { Headers, Header, HeadersInner, Main } from './main.styles';
 
 const MainView = () => {
-	// @TODO: Use diff to apply new effects,
-	// do not reproduce each time all the effects
 	const [action, setAction] = useState('');
 	const [filters, setFilters] = useState<string[]>([]);
 
