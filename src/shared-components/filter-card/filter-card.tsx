@@ -28,7 +28,7 @@ const FilterCard = ({ onPress, onAdjustPress, activeSlider, effectId, label, isA
 				</Preview>
 			</ActiveArea>
 
-			<Edit as={AriaButton} onPress={onAdjustPressHd}>
+			<Edit $isActive={activeSlider === effectId} as={AriaButton} onPress={onAdjustPressHd}>
 				Adjust
 			</Edit>
 		</Root>

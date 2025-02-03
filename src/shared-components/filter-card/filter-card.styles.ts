@@ -11,12 +11,12 @@ export const ActiveArea = styled.button`
 	background-color: transparent;
 `;
 
-export const Edit = styled.span`
+export const Edit = styled.span<{ $isActive: boolean }>`
 	border: none;
-	color: var(--text-color);
 	font-weight: 500;
 	font-size: 14px;
-	background-color: var(--bg-color);
+	background-color: ${({ $isActive }) => ($isActive ? 'var(--accent-yellow)' : 'var(--bg-color)')};
+	color: ${({ $isActive }) => ($isActive ? 'var(--bg-color)' : 'var(--text-color)')};
 	padding: 3px 12px 6px 12px;
 	border-radius: 8px;
 	font-variant-caps: all-petite-caps;

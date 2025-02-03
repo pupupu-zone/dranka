@@ -2,9 +2,16 @@ import styled from 'styled-components';
 
 export const Slider = styled.div`
 	display: grid;
+	grid-area: slider;
 	grid-template-columns: 1fr;
 	width: 100%;
 	color: white;
+`;
+
+export const Title = styled.span`
+	grid-area: title;
+	color: var(--text-color);
+	font-size: 14px;
 `;
 
 export const Track = styled.div`
@@ -31,15 +38,19 @@ export const Thumb = styled.div`
 `;
 
 export const Info = styled.div`
-	font-size: 12px;
+	grid-area: info;
 	color: var(--accent);
+	font-size: 12px;
 `;
 
 export default styled.div`
 	display: grid;
-	grid-auto-flow: column;
 	grid-auto-columns: 24px 1fr;
-	align-items: center;
+	grid-auto-flow: column;
+	grid-template-areas:
+		'title title'
+		'info slider';
 	gap: 24px;
+	align-items: center;
 	width: 100%;
 `;
