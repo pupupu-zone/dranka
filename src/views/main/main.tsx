@@ -60,7 +60,8 @@ const MainView = () => {
 		}
 
 		if (filters.includes('invert')) {
-			const invertImage = invert(modifiedImage);
+			const strength = strengths.invert / 100;
+			const invertImage = invert(modifiedImage, strength);
 
 			modifiedImage = invertImage;
 		}
@@ -94,9 +95,10 @@ const MainView = () => {
 	};
 
 	const toggleFilter = (filterId: string) => {
+		setActiveSlider('');
+
 		if (filterId === 'original') {
 			resetFilters();
-			setActiveSlider('');
 		} else if (filters.includes(filterId)) {
 			removeFilter(filterId);
 		} else {
