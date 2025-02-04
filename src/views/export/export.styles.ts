@@ -20,7 +20,7 @@ export default styled.div`
 	display: flex;
 	justify-content: center;
 	width: 100vw;
-	background-color: #5f5f5f60;
+	background-color: #5f5f5f80;
 	transform: translateX(-50%);
 	backdrop-filter: blur(2px);
 `;

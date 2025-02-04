@@ -22,7 +22,7 @@ export default styled.div`
 	left: 50%;
 	width: 100vw;
 	padding: 18px 0;
-	background-color: #5f5f5f60;
+	background-color: #5f5f5f80;
 	transform: translateX(-50%);
 	backdrop-filter: blur(2px);
 `;

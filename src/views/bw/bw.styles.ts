@@ -14,7 +14,7 @@ export const SliderWrap = styled.div`
 	justify-self: center;
 	margin-top: 24px;
 	margin-bottom: 24px;
-	background-color: #5f5f5f60;
+	background-color: #5f5f5f80;
 	border-radius: 18px;
 	margin: 0;
 	padding: 24px;
@@ -53,5 +53,5 @@ export const Scroll = styled.div`
 
 export const Test = styled.div`
 	padding: 18px 0;
-	background-color: #5f5f5f60;
+	background-color: #5f5f5f80;
 `;
