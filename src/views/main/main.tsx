@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, Outlet } from '@tanstack/react-router';
 
 import MainContext from '@views/context';
-import { grayscale, invert, sepia, blur, minify_image, rotate } from '@wasm/dranka';
+import { grayscale, invert, sepia, blur, minify_image, rotate, flip } from '@wasm/dranka';
 
 import { HorizontalScroll } from '@ui';
 import UploadImage from './upload-image';
@@ -17,7 +17,9 @@ const MainView = () => {
 		sepia: 100,
 		blur: 10,
 		invert: 100,
-		angle: 0
+		angle: 0,
+		isFlippedH: false,
+		isFlippedV: false
 	});
 	const [action, setAction] = useState('');
 	const [filters, setFilters] = useState<string[]>([]);
@@ -74,14 +76,19 @@ const MainView = () => {
 		}
 
 		if (action === 'mirror-horizontal') {
-			console.log('FLIP H');
+			const shallFlip = strengths.isFlippedH;
 
-			return '';
+			const flippedImage64 = shallFlip ? flip(imageToModify, 'horizontal') : imageToModify;
+
+			return flippedImage64;
 		}
 
 		if (action === 'mirror-vertical') {
-			console.log('FLIP V');
-			return '';
+			const shallFlip = strengths.isFlippedV;
+
+			const flippedImage64 = shallFlip ? flip(imageToModify, 'vertical') : imageToModify;
+
+			return flippedImage64;
 		}
 
 		return '';

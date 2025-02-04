@@ -31,6 +31,14 @@ const ActionCard = ({ actionId, label, type }: Props) => {
 			setStrengths('angle', normalizeAngle(strengths.angle + 90));
 		}
 
+		if (actionId === 'mirror-horizontal') {
+			setStrengths('isFlippedH', strengths.isFlippedH ? false : true);
+		}
+
+		if (actionId === 'mirror-vertical') {
+			setStrengths('isFlippedV', strengths.isFlippedV ? false : true);
+		}
+
 		setActiveAction(actionId);
 
 		window.setTimeout(() => {

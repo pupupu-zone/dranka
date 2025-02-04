@@ -20,6 +20,14 @@ const ExportView = () => {
 			modifiedImage = applyActions('rotate-right', modifiedImage);
 		}
 
+		if (strengths.isFlippedV) {
+			modifiedImage = applyActions('mirror-vertical', modifiedImage);
+		}
+
+		if (strengths.isFlippedH) {
+			modifiedImage = applyActions('mirror-horizontal', modifiedImage);
+		}
+
 		saveBase64(modifiedImage, 'image');
 	};
 
