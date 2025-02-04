@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
+import MainContext from '@views/context';
 import previewImg from '@images/preview.jpg';
 
 import { Button as AriaButton } from 'react-aria-components';
-import Root, { Edit, Label, Preview, Img, ActiveArea } from './filter-card.styles';
+import Root, { AdjustBtn, Label, Preview, Img, ActiveArea } from './filter-card.styles';
 
 import type { Props } from './filter-card.d';
 
-const FilterCard = ({ toggleFilter, setActiveSlider, activeSlider, effectId, label, isActive }: Props) => {
+const FilterCard = ({ effectId, label, isActive }: Props) => {
+	const { activeSlider, toggleFilter, setActiveSlider } = useContext(MainContext);
+
 	const onPressHd = () => {
 		toggleFilter(effectId);
 	};
@@ -32,14 +35,14 @@ const FilterCard = ({ toggleFilter, setActiveSlider, activeSlider, effectId, lab
 				</Preview>
 			</ActiveArea>
 
-			<Edit
+			<AdjustBtn
 				$isActive={activeSlider === effectId}
 				isDisabled={effectId === 'original' || !isActive}
 				as={AriaButton}
 				onPress={onAdjustPressHd}
 			>
 				Adjust
-			</Edit>
+			</AdjustBtn>
 		</Root>
 	);
 };

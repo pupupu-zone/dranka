@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 
 import MainContext from '@views/context';
 
-import Slider from './slider';
 import { HorizontalScroll } from '@ui';
 import FilterCard from '@shared/filter-card';
-import Root, { SliderRoot, SliderWrap, Test, Scroll, InnerList } from './bw.styles';
+import StrengthSlider from '@shared/strength-slider';
+import Root, { SliderRoot, Test, Scroll, InnerList } from './bw.styles';
 
 const FILTERS = [
 	{
@@ -21,16 +21,7 @@ const FILTERS = [
 ];
 
 const BWActions = () => {
-	const { originalImage64, toggleFilter, appliedFilters, setStrengths, strengths, activeSlider, setActiveSlider } =
-		useContext(MainContext);
-
-	const onChangeHd = (strength: number) => {
-		setStrengths('grayscale', strength);
-	};
-
-	const close = () => {
-		setActiveSlider('');
-	};
+	const { originalImage64, appliedFilters, activeSlider } = useContext(MainContext);
 
 	if (!originalImage64) {
 		return null;
@@ -38,11 +29,9 @@ const BWActions = () => {
 
 	return (
 		<Root>
-			{activeSlider === 'grayscale' && (
+			{Boolean(activeSlider) && (
 				<SliderRoot>
-					<SliderWrap>
-						<Slider externalValue={strengths.grayscale} onChange={onChangeHd} close={close} />
-					</SliderWrap>
+					<StrengthSlider />
 				</SliderRoot>
 			)}
 
@@ -54,9 +43,6 @@ const BWActions = () => {
 								key={filter.id}
 								isActive={appliedFilters.includes(filter.id)}
 								effectId={filter.id}
-								toggleFilter={toggleFilter}
-								activeSlider={activeSlider}
-								setActiveSlider={setActiveSlider}
 								label={filter.label}
 							/>
 						))}

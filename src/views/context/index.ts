@@ -34,9 +34,7 @@ const defaultContext: MainContextT = {
 	removeFilter: () => {},
 	resetFilters: () => {},
 	toggleFilter: () => {},
-	strengths: {
-		grayscale: 100
-	},
+	strengths: {},
 	setStrengths: () => {},
 	activeSlider: '',
 	setActiveSlider: () => {}

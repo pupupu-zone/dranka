@@ -11,8 +11,11 @@ import Root, { Headers, Header, HeadersInner, Main } from './main.styles';
 
 const MainView = () => {
 	const [activeSlider, setActiveSlider] = useState('');
-	const [strengths, setStrengths] = useState<{ [key: string]: number }>({
-		grayscale: 100
+	const [strengths, setStrengths] = useState<Record<string, number>>({
+		grayscale: 100,
+		sepia: 100,
+		blur: 10,
+		invert: 100
 	});
 	const [action, setAction] = useState('');
 	const [filters, setFilters] = useState<string[]>([]);
@@ -37,7 +40,7 @@ const MainView = () => {
 		const modifiedImage = applyFilters(filters, compressedImage64);
 
 		setPreviewImage64(modifiedImage);
-	}, [filters, compressedImage64, strengths.grayscale]);
+	}, [filters, compressedImage64, strengths]);
 
 	const setStr = (key: string, value: number) => {
 		setStrengths({
@@ -50,7 +53,8 @@ const MainView = () => {
 		let modifiedImage = imageToModify;
 
 		if (filters.includes('grayscale')) {
-			const grayImage64 = grayscale(modifiedImage, strengths.grayscale / 100);
+			const strength = strengths.grayscale / 100;
+			const grayImage64 = grayscale(modifiedImage, strength);
 
 			modifiedImage = grayImage64;
 		}
@@ -62,13 +66,14 @@ const MainView = () => {
 		}
 
 		if (filters.includes('sepia')) {
-			const sepiaImage = sepia(modifiedImage, 1);
+			const strength = strengths.sepia / 100;
+			const sepiaImage = sepia(modifiedImage, strength);
 
 			modifiedImage = sepiaImage;
 		}
 
 		if (filters.includes('blur')) {
-			const blurImage = blur(modifiedImage, 10);
+			const blurImage = blur(modifiedImage, strengths.blur);
 
 			modifiedImage = blurImage;
 		}
@@ -94,10 +99,8 @@ const MainView = () => {
 			setActiveSlider('');
 		} else if (filters.includes(filterId)) {
 			removeFilter(filterId);
-			setActiveSlider('');
 		} else {
 			addFilter(filterId);
-			setActiveSlider(filterId);
 		}
 	};
 

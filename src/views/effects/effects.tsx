@@ -4,6 +4,8 @@ import MainContext from '@views/context';
 
 import FilterCard from '@shared/filter-card';
 import FiltersList from '@shared/filters-list';
+import StrengthSlider from '@shared/strength-slider';
+import Root, { SliderRoot } from './effects.styles';
 
 const FILTERS = [
 	{
@@ -29,25 +31,31 @@ const FILTERS = [
 ];
 
 const EffectsActions = () => {
-	const { originalImage64, toggleFilter, appliedFilters, setActiveSlider } = useContext(MainContext);
+	const { originalImage64, appliedFilters, activeSlider } = useContext(MainContext);
 
 	if (!originalImage64) {
 		return null;
 	}
 
 	return (
-		<FiltersList>
-			{FILTERS.map((filter) => (
-				<FilterCard
-					key={filter.id}
-					isActive={appliedFilters.includes(filter.id)}
-					effectId={filter.id}
-					toggleFilter={toggleFilter}
-					setActiveSlider={setActiveSlider}
-					label={filter.label}
-				/>
-			))}
-		</FiltersList>
+		<Root>
+			{Boolean(activeSlider) && (
+				<SliderRoot>
+					<StrengthSlider />
+				</SliderRoot>
+			)}
+
+			<FiltersList>
+				{FILTERS.map((filter) => (
+					<FilterCard
+						key={filter.id}
+						isActive={appliedFilters.includes(filter.id)}
+						effectId={filter.id}
+						label={filter.label}
+					/>
+				))}
+			</FiltersList>
+		</Root>
 	);
 };
 

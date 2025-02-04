@@ -4,23 +4,6 @@ export const SliderRoot = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
 	width: 100%;
-	color: white;
-`;
-
-export const SliderWrap = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	justify-self: center;
-	margin-top: 24px;
-	margin-bottom: 24px;
-	background-color: #5f5f5f80;
-	border-radius: 18px;
-	margin: 0;
-	padding: 24px;
-	border-radius: 18px;
-	height: auto;
-	width: 320px;
 `;
 
 export default styled.div`

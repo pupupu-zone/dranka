@@ -19,4 +19,4 @@ const FiltersList = ({ children }: Props) => {
 	);
 };
 
-export default FiltersList;
+export default React.memo(FiltersList);
