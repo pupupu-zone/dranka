@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { Slider as AriaSlider, SliderThumb as AriaThumb, SliderTrack as AriaTrack } from 'react-aria-components';
-import Root, { Slider, Track, Thumb, Info } from './slider.styles';
+import { Icon } from '@ui';
+import {
+	Button as AriaButton,
+	Slider as AriaSlider,
+	SliderThumb as AriaThumb,
+	SliderTrack as AriaTrack
+} from 'react-aria-components';
+import Root, { OkBtn, Slider, Track, Thumb, Info } from './slider.styles';
 
-const SliderBw = ({ externalValue, onChange }) => {
+const SliderBw = ({ externalValue, onChange, close }) => {
 	const [value, setValue] = useState<number>(externalValue);
 	const [nextValue] = useDebounce(value, 500);
 
@@ -16,6 +22,10 @@ const SliderBw = ({ externalValue, onChange }) => {
 		setValue(Array.isArray(val) ? val[0] : val);
 	};
 
+	const closeHd = () => {
+		close();
+	};
+
 	return (
 		<Root>
 			<Info>{value}</Info>
@@ -24,6 +34,9 @@ const SliderBw = ({ externalValue, onChange }) => {
 					<Thumb as={AriaThumb} />
 				</Track>
 			</Slider>
+			<OkBtn as={AriaButton} onPress={closeHd}>
+				<Icon name="check" />
+			</OkBtn>
 		</Root>
 	);
 };

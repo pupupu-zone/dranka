@@ -20,6 +20,12 @@ export const Edit = styled.span<{ $isActive: boolean }>`
 	padding: 3px 12px 6px 12px;
 	border-radius: 8px;
 	font-variant-caps: all-petite-caps;
+	cursor: pointer;
+
+	&[data-disabled] {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
 `;
 
 export const Label = styled.label<{ $isActive: boolean }>`

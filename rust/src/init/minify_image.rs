@@ -18,7 +18,7 @@ pub fn minify_image(init_base64: &str) -> String {
     let aspect = (width as f32) / (height as f32);
     let width = width.min(640);
     let height = (width as f32 / aspect) as u32;
-    let resized_img = loaded_img.resize(width, height, imageops::FilterType::Nearest);
+    let resized_img = loaded_img.resize(width, height, imageops::FilterType::Lanczos3);
 
     let new_image = utils::create_image(resized_img, extension);
 

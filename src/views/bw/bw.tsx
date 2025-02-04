@@ -28,6 +28,10 @@ const BWActions = () => {
 		setStrengths('grayscale', strength);
 	};
 
+	const close = () => {
+		setActiveSlider('');
+	};
+
 	if (!originalImage64) {
 		return null;
 	}
@@ -37,7 +41,7 @@ const BWActions = () => {
 			{activeSlider === 'grayscale' && (
 				<SliderRoot>
 					<SliderWrap>
-						<Slider externalValue={strengths.grayscale} onChange={onChangeHd} />
+						<Slider externalValue={strengths.grayscale} onChange={onChangeHd} close={close} />
 					</SliderWrap>
 				</SliderRoot>
 			)}
@@ -52,7 +56,7 @@ const BWActions = () => {
 								effectId={filter.id}
 								onPress={toggleFilter}
 								activeSlider={activeSlider}
-								onAdjustPress={setActiveSlider}
+								setActiveSlider={setActiveSlider}
 								label={filter.label}
 							/>
 						))}

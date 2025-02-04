@@ -7,28 +7,43 @@ import Root, { Edit, Label, Preview, Img, ActiveArea } from './filter-card.style
 
 import type { Props } from './filter-card.d';
 
-const FilterCard = ({ onPress, onAdjustPress, activeSlider, effectId, label, isActive }: Props) => {
-	const onPressHd = () => onPress(effectId);
+const FilterCard = ({ onPress, setActiveSlider, activeSlider, effectId, label, isActive }: Props) => {
+	const onPressHd = () => {
+		onPress(effectId);
+
+		if (effectId === 'original' || activeSlider === effectId) {
+			setActiveSlider('');
+		} else if (!isActive) {
+			setActiveSlider(effectId);
+		}
+	};
+
 	const onAdjustPressHd = () => {
 		if (activeSlider === effectId) {
-			onAdjustPress('');
+			setActiveSlider('');
 			return;
 		}
 
-		onAdjustPress(effectId);
+		setActiveSlider(effectId);
 	};
 
 	return (
 		<Root>
 			<ActiveArea as={AriaButton} onPress={onPressHd}>
 				<Label $isActive={isActive}>{label}</Label>
+
 				<Preview $isActive={isActive}>
 					{/* @ts-ignore */}
 					<Img src={previewImg} alt="Preview" $effect={effectId} />
 				</Preview>
 			</ActiveArea>
 
-			<Edit $isActive={activeSlider === effectId} as={AriaButton} onPress={onAdjustPressHd}>
+			<Edit
+				$isActive={activeSlider === effectId}
+				isDisabled={effectId === 'original' || !isActive}
+				as={AriaButton}
+				onPress={onAdjustPressHd}
+			>
 				Adjust
 			</Edit>
 		</Root>

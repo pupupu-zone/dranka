@@ -1,5 +1,17 @@
 import styled from 'styled-components';
 
+export const OkBtn = styled.button`
+	display: grid;
+	width: 24px;
+	height: 24px;
+	margin: 0;
+	padding: 0;
+	color: var(--accent);
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+`;
+
 export const Slider = styled.div`
 	display: grid;
 	width: 100%;
@@ -21,7 +33,7 @@ export const Thumb = styled.div`
 	cursor: pointer;
 
 	&[data-dragging] {
-		background-color: var(--accent-yellow);
+		border: 4px solid var(--accent-yellow);
 	}
 
 	&[data-focus-visible] {
@@ -36,7 +48,7 @@ export const Info = styled.div`
 
 export default styled.div`
 	display: grid;
-	grid-auto-columns: 24px 1fr;
+	grid-auto-columns: 24px 1fr 24px;
 	grid-auto-flow: column;
 	gap: 24px;
 	align-items: center;
