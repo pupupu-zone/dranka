@@ -29,7 +29,7 @@ const FILTERS = [
 ];
 
 const EffectsActions = () => {
-	const { originalImage64, toggleFilter, appliedFilters } = useContext(MainContext);
+	const { originalImage64, toggleFilter, appliedFilters, setActiveSlider } = useContext(MainContext);
 
 	if (!originalImage64) {
 		return null;
@@ -42,7 +42,8 @@ const EffectsActions = () => {
 					key={filter.id}
 					isActive={appliedFilters.includes(filter.id)}
 					effectId={filter.id}
-					onPress={toggleFilter}
+					toggleFilter={toggleFilter}
+					setActiveSlider={setActiveSlider}
 					label={filter.label}
 				/>
 			))}

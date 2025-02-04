@@ -54,7 +54,7 @@ const BWActions = () => {
 								key={filter.id}
 								isActive={appliedFilters.includes(filter.id)}
 								effectId={filter.id}
-								onPress={toggleFilter}
+								toggleFilter={toggleFilter}
 								activeSlider={activeSlider}
 								setActiveSlider={setActiveSlider}
 								label={filter.label}

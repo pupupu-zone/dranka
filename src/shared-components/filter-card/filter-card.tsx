@@ -7,15 +7,9 @@ import Root, { Edit, Label, Preview, Img, ActiveArea } from './filter-card.style
 
 import type { Props } from './filter-card.d';
 
-const FilterCard = ({ onPress, setActiveSlider, activeSlider, effectId, label, isActive }: Props) => {
+const FilterCard = ({ toggleFilter, setActiveSlider, activeSlider, effectId, label, isActive }: Props) => {
 	const onPressHd = () => {
-		onPress(effectId);
-
-		if (effectId === 'original' || activeSlider === effectId) {
-			setActiveSlider('');
-		} else if (!isActive) {
-			setActiveSlider(effectId);
-		}
+		toggleFilter(effectId);
 	};
 
 	const onAdjustPressHd = () => {

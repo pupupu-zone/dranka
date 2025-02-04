@@ -91,10 +91,13 @@ const MainView = () => {
 	const toggleFilter = (filterId: string) => {
 		if (filterId === 'original') {
 			resetFilters();
+			setActiveSlider('');
 		} else if (filters.includes(filterId)) {
 			removeFilter(filterId);
+			setActiveSlider('');
 		} else {
 			addFilter(filterId);
+			setActiveSlider(filterId);
 		}
 	};
 
