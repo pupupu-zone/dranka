@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, Outlet } from '@tanstack/react-router';
 
 import MainContext from '@views/context';
-import { grayscale, invert, sepia, blur, minify_image } from '@wasm/dranka';
+import { grayscale, invert, sepia, blur, minify_image, rotate } from '@wasm/dranka';
 
 import { HorizontalScroll } from '@ui';
 import UploadImage from './upload-image';
@@ -10,12 +10,14 @@ import ImagePreview from './image-preview';
 import Root, { Headers, Header, HeadersInner, Main } from './main.styles';
 
 const MainView = () => {
+	const [activeAction, setActiveAction] = useState('');
 	const [activeSlider, setActiveSlider] = useState('');
 	const [strengths, setStrengths] = useState<Record<string, number>>({
 		grayscale: 100,
 		sepia: 100,
 		blur: 10,
-		invert: 100
+		invert: 100,
+		angle: 0
 	});
 	const [action, setAction] = useState('');
 	const [filters, setFilters] = useState<string[]>([]);
@@ -42,11 +44,47 @@ const MainView = () => {
 		setPreviewImage64(modifiedImage);
 	}, [filters, compressedImage64, strengths]);
 
+	useEffect(() => {
+		if (!activeAction) return;
+
+		const actionedImage = applyActions(activeAction, compressedImage64);
+		const modifiedImage = applyFilters(filters, actionedImage);
+
+		setPreviewImage64(modifiedImage);
+	}, [activeAction, strengths.angle]);
+
 	const setStr = (key: string, value: number) => {
 		setStrengths({
 			...strengths,
 			[key]: value
 		});
+	};
+
+	const applyActions = (action: string, imageToModify: string) => {
+		if (action === 'rotate-right') {
+			const rotatedImage64 = rotate(imageToModify, strengths.angle);
+
+			return rotatedImage64;
+		}
+
+		if (action === 'rotate-left') {
+			const rotatedImage64 = rotate(imageToModify, strengths.angle);
+
+			return rotatedImage64;
+		}
+
+		if (action === 'mirror-horizontal') {
+			console.log('FLIP H');
+
+			return '';
+		}
+
+		if (action === 'mirror-vertical') {
+			console.log('FLIP V');
+			return '';
+		}
+
+		return '';
 	};
 
 	const applyFilters = (filters: string[], imageToModify: string) => {
@@ -108,6 +146,8 @@ const MainView = () => {
 
 	return (
 		<MainContext.Provider
+			// @TODO: Replace this shit with something more reliable
+			// like effector or whatever idc
 			value={{
 				originalImage64,
 				previewImage64,
@@ -122,7 +162,10 @@ const MainView = () => {
 				strengths,
 				setStrengths: setStr,
 				activeSlider,
-				setActiveSlider
+				setActiveSlider,
+				activeAction,
+				setActiveAction,
+				applyActions
 			}}
 		>
 			<Root>
@@ -141,13 +184,13 @@ const MainView = () => {
 								Rotate
 							</Header>
 
-							<Header as={Link} to="/crop" activeProps={{ className: 'active' }}>
+							{/* <Header as={Link} to="/crop" activeProps={{ className: 'active' }}>
 								Crop
-							</Header>
+							</Header> */}
 
-							<Header as={Link} to="/merge" activeProps={{ className: 'active' }}>
+							{/* <Header as={Link} to="/merge" activeProps={{ className: 'active' }}>
 								Merge
-							</Header>
+							</Header> */}
 
 							<Header as={Link} to="/export" activeProps={{ className: 'active' }}>
 								Export

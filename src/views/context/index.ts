@@ -20,6 +20,10 @@ type MainContextT = {
 
 	activeSlider: string;
 	setActiveSlider: (slider: string) => void;
+
+	// actions
+	activeAction: string;
+	setActiveAction: (action: string) => void;
 };
 
 const defaultContext: MainContextT = {
@@ -37,7 +41,11 @@ const defaultContext: MainContextT = {
 	strengths: {},
 	setStrengths: () => {},
 	activeSlider: '',
-	setActiveSlider: () => {}
+	setActiveSlider: () => {},
+
+	// actions
+	activeAction: '',
+	setActiveAction: () => {}
 };
 
 const MainContext = createContext(defaultContext);

@@ -2,64 +2,50 @@ import React, { useContext } from 'react';
 
 import MainContext from '@views/context';
 
-import FilterCard from '@shared/filter-card';
+import ActionCard from '@shared/action-card';
 import FiltersList from '@shared/filters-list';
+import Root from './rotate.styles';
 
-const ACTIONS = [
-	{
-		id: 'reset',
-		label: 'Reset',
-		type: 'action'
-	},
+type ActionType = 'reset' | 'action' | 'fast-action';
 
+const ACTIONS: { id: string; label: string; type: ActionType }[] = [
 	{
 		id: 'rotate-left',
 		label: 'Left',
-		type: 'action'
-	},
-	{
-		id: 'rotate-free',
-		label: 'Free',
-		type: 'action'
+		type: 'fast-action'
 	},
 	{
 		id: 'rotate-right',
 		label: 'Right',
-		type: 'action'
+		type: 'fast-action'
 	},
-
 	{
 		id: 'mirror-horizontal',
 		label: 'Mirror H',
-		type: 'action'
+		type: 'fast-action'
 	},
 	{
 		id: 'mirror-vertical',
 		label: 'Mirror V',
-		type: 'action'
+		type: 'fast-action'
 	}
 ];
 
 const RotateActions = () => {
-	const { originalImage64, toggleFilter, appliedFilters, setActiveSlider } = useContext(MainContext);
+	const { originalImage64 } = useContext(MainContext);
 
 	if (!originalImage64) {
 		return null;
 	}
 
 	return (
-		<FiltersList>
-			{ACTIONS.map((filter) => (
-				<FilterCard
-					key={filter.id}
-					isActive={appliedFilters.includes(filter.id)}
-					effectId={filter.id}
-					toggleFilter={toggleFilter}
-					setActiveSlider={setActiveSlider}
-					label={filter.label}
-				/>
-			))}
-		</FiltersList>
+		<Root>
+			<FiltersList>
+				{ACTIONS.map((action) => (
+					<ActionCard key={action.id} actionId={action.id} label={action.label} type={action.type} />
+				))}
+			</FiltersList>
+		</Root>
 	);
 };
 
