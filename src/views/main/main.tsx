@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, act } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Outlet } from '@tanstack/react-router';
 
 import MainContext, { type ActionT } from '@views/context';
@@ -53,46 +53,45 @@ const MainView = () => {
 	const applyFilters = (actions: ActionT[], imageToModify: string) => {
 		let modifiedImage = imageToModify;
 
+		const rotationAction = actions.find((action) => action.action_id === 'rotate');
+		const flipHorizontal = actions.find((action) => action.action_id === 'mirror-horizontal');
+		const flipVertical = actions.find((action) => action.action_id === 'mirror-vertical');
+
+		if (rotationAction && typeof rotationAction.weight === 'number') {
+			modifiedImage = rotate(modifiedImage, rotationAction.weight);
+		}
+
+		if (flipHorizontal) {
+			modifiedImage = flip(modifiedImage, 'horizontal');
+		}
+
+		if (flipVertical) {
+			modifiedImage = flip(modifiedImage, 'vertical');
+		}
+
 		actions.forEach((action) => {
-			if (action.action_id === 'grayscale') {
-				const strength = action.weight / 100;
-				const grayImage64 = grayscale(modifiedImage, strength);
-				modifiedImage = grayImage64;
-			}
-
-			if (action.action_id === 'invert') {
-				const strength = action.weight / 100;
-				const invertImage = invert(modifiedImage, strength);
-				modifiedImage = invertImage;
-			}
-
-			if (action.action_id === 'sepia') {
-				const strength = action.weight / 100;
-				const sepiaImage = sepia(modifiedImage, strength);
-				modifiedImage = sepiaImage;
-			}
-
-			if (action.action_id === 'blur') {
-				const blurImage = blur(modifiedImage, action.weight);
-				modifiedImage = blurImage;
-			}
-
-			if (action.action_id === 'rotate') {
-				const rotatedImage64 = rotate(imageToModify, action.weight);
-
-				modifiedImage = rotatedImage64;
-			}
-
-			if (action.action_id === 'mirror-horizontal') {
-				const flippedImage64 = flip(imageToModify, 'horizontal');
-
-				modifiedImage = flippedImage64;
-			}
-
-			if (action.action_id === 'mirror-vertical') {
-				const flippedImage64 = flip(imageToModify, 'vertical');
-
-				modifiedImage = flippedImage64;
+			switch (action.action_id) {
+				case 'grayscale': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+					modifiedImage = grayscale(modifiedImage, strength);
+					break;
+				}
+				case 'invert': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+					modifiedImage = invert(modifiedImage, strength);
+					break;
+				}
+				case 'sepia': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+					modifiedImage = sepia(modifiedImage, strength);
+					break;
+				}
+				case 'blur': {
+					if (typeof action.weight === 'number') {
+						modifiedImage = blur(modifiedImage, action.weight);
+					}
+					break;
+				}
 			}
 		});
 
