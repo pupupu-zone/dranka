@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, Outlet } from '@tanstack/react-router';
+import { Outlet } from '@tanstack/react-router';
 
 import MainContext from '@views/context';
 import { grayscale, invert, sepia, blur, minify_image, rotate, flip } from '@wasm/dranka';
 
-import { HorizontalScroll } from '@ui';
+import Navigation from './navigation';
 import UploadImage from './upload-image';
 import ImagePreview from './image-preview';
-import Root, { Headers, Header, HeadersInner, Main } from './main.styles';
+import Root, { Main } from './main.styles';
 
 const MainView = () => {
 	const [activeAction, setActiveAction] = useState('');
@@ -176,35 +176,7 @@ const MainView = () => {
 			}}
 		>
 			<Root>
-				<Headers>
-					<HorizontalScroll>
-						<HeadersInner>
-							<Header as={Link} to="/bw" activeProps={{ className: 'active' }}>
-								B&W
-							</Header>
-
-							<Header as={Link} to="/effects" activeProps={{ className: 'active' }}>
-								Effects
-							</Header>
-
-							<Header as={Link} to="/rotate" activeProps={{ className: 'active' }}>
-								Rotate
-							</Header>
-
-							{/* <Header as={Link} to="/crop" activeProps={{ className: 'active' }}>
-								Crop
-							</Header> */}
-
-							{/* <Header as={Link} to="/merge" activeProps={{ className: 'active' }}>
-								Merge
-							</Header> */}
-
-							<Header as={Link} to="/export" activeProps={{ className: 'active' }}>
-								Export
-							</Header>
-						</HeadersInner>
-					</HorizontalScroll>
-				</Headers>
+				<Navigation />
 
 				<Main>
 					{originalImage64 && <ImagePreview />}

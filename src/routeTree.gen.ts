@@ -12,14 +12,12 @@
 
 import { Route as rootRoute } from './core/routes/__root'
 import { Route as RotateRouteImport } from './core/routes/rotate/route'
-import { Route as MergeRouteImport } from './core/routes/merge/route'
 import { Route as ExportRouteImport } from './core/routes/export/route'
 import { Route as EffectsRouteImport } from './core/routes/effects/route'
 import { Route as CropRouteImport } from './core/routes/crop/route'
 import { Route as BwRouteImport } from './core/routes/bw/route'
 import { Route as IndexImport } from './core/routes/index'
 import { Route as RotateIndexImport } from './core/routes/rotate/index'
-import { Route as MergeIndexImport } from './core/routes/merge/index'
 import { Route as ExportIndexImport } from './core/routes/export/index'
 import { Route as EffectsIndexImport } from './core/routes/effects/index'
 import { Route as CropIndexImport } from './core/routes/crop/index'
@@ -30,12 +28,6 @@ import { Route as BwIndexImport } from './core/routes/bw/index'
 const RotateRouteRoute = RotateRouteImport.update({
   id: '/rotate',
   path: '/rotate',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const MergeRouteRoute = MergeRouteImport.update({
-  id: '/merge',
-  path: '/merge',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -73,12 +65,6 @@ const RotateIndexRoute = RotateIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => RotateRouteRoute,
-} as any)
-
-const MergeIndexRoute = MergeIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => MergeRouteRoute,
 } as any)
 
 const ExportIndexRoute = ExportIndexImport.update({
@@ -144,13 +130,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExportRouteImport
       parentRoute: typeof rootRoute
     }
-    '/merge': {
-      id: '/merge'
-      path: '/merge'
-      fullPath: '/merge'
-      preLoaderRoute: typeof MergeRouteImport
-      parentRoute: typeof rootRoute
-    }
     '/rotate': {
       id: '/rotate'
       path: '/rotate'
@@ -185,13 +164,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/export/'
       preLoaderRoute: typeof ExportIndexImport
       parentRoute: typeof ExportRouteImport
-    }
-    '/merge/': {
-      id: '/merge/'
-      path: '/'
-      fullPath: '/merge/'
-      preLoaderRoute: typeof MergeIndexImport
-      parentRoute: typeof MergeRouteImport
     }
     '/rotate/': {
       id: '/rotate/'
@@ -252,18 +224,6 @@ const ExportRouteRouteWithChildren = ExportRouteRoute._addFileChildren(
   ExportRouteRouteChildren,
 )
 
-interface MergeRouteRouteChildren {
-  MergeIndexRoute: typeof MergeIndexRoute
-}
-
-const MergeRouteRouteChildren: MergeRouteRouteChildren = {
-  MergeIndexRoute: MergeIndexRoute,
-}
-
-const MergeRouteRouteWithChildren = MergeRouteRoute._addFileChildren(
-  MergeRouteRouteChildren,
-)
-
 interface RotateRouteRouteChildren {
   RotateIndexRoute: typeof RotateIndexRoute
 }
@@ -282,13 +242,11 @@ export interface FileRoutesByFullPath {
   '/crop': typeof CropRouteRouteWithChildren
   '/effects': typeof EffectsRouteRouteWithChildren
   '/export': typeof ExportRouteRouteWithChildren
-  '/merge': typeof MergeRouteRouteWithChildren
   '/rotate': typeof RotateRouteRouteWithChildren
   '/bw/': typeof BwIndexRoute
   '/crop/': typeof CropIndexRoute
   '/effects/': typeof EffectsIndexRoute
   '/export/': typeof ExportIndexRoute
-  '/merge/': typeof MergeIndexRoute
   '/rotate/': typeof RotateIndexRoute
 }
 
@@ -298,7 +256,6 @@ export interface FileRoutesByTo {
   '/crop': typeof CropIndexRoute
   '/effects': typeof EffectsIndexRoute
   '/export': typeof ExportIndexRoute
-  '/merge': typeof MergeIndexRoute
   '/rotate': typeof RotateIndexRoute
 }
 
@@ -309,13 +266,11 @@ export interface FileRoutesById {
   '/crop': typeof CropRouteRouteWithChildren
   '/effects': typeof EffectsRouteRouteWithChildren
   '/export': typeof ExportRouteRouteWithChildren
-  '/merge': typeof MergeRouteRouteWithChildren
   '/rotate': typeof RotateRouteRouteWithChildren
   '/bw/': typeof BwIndexRoute
   '/crop/': typeof CropIndexRoute
   '/effects/': typeof EffectsIndexRoute
   '/export/': typeof ExportIndexRoute
-  '/merge/': typeof MergeIndexRoute
   '/rotate/': typeof RotateIndexRoute
 }
 
@@ -327,16 +282,14 @@ export interface FileRouteTypes {
     | '/crop'
     | '/effects'
     | '/export'
-    | '/merge'
     | '/rotate'
     | '/bw/'
     | '/crop/'
     | '/effects/'
     | '/export/'
-    | '/merge/'
     | '/rotate/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bw' | '/crop' | '/effects' | '/export' | '/merge' | '/rotate'
+  to: '/' | '/bw' | '/crop' | '/effects' | '/export' | '/rotate'
   id:
     | '__root__'
     | '/'
@@ -344,13 +297,11 @@ export interface FileRouteTypes {
     | '/crop'
     | '/effects'
     | '/export'
-    | '/merge'
     | '/rotate'
     | '/bw/'
     | '/crop/'
     | '/effects/'
     | '/export/'
-    | '/merge/'
     | '/rotate/'
   fileRoutesById: FileRoutesById
 }
@@ -361,7 +312,6 @@ export interface RootRouteChildren {
   CropRouteRoute: typeof CropRouteRouteWithChildren
   EffectsRouteRoute: typeof EffectsRouteRouteWithChildren
   ExportRouteRoute: typeof ExportRouteRouteWithChildren
-  MergeRouteRoute: typeof MergeRouteRouteWithChildren
   RotateRouteRoute: typeof RotateRouteRouteWithChildren
 }
 
@@ -371,7 +321,6 @@ const rootRouteChildren: RootRouteChildren = {
   CropRouteRoute: CropRouteRouteWithChildren,
   EffectsRouteRoute: EffectsRouteRouteWithChildren,
   ExportRouteRoute: ExportRouteRouteWithChildren,
-  MergeRouteRoute: MergeRouteRouteWithChildren,
   RotateRouteRoute: RotateRouteRouteWithChildren,
 }
 
@@ -390,7 +339,6 @@ export const routeTree = rootRoute
         "/crop",
         "/effects",
         "/export",
-        "/merge",
         "/rotate"
       ]
     },
@@ -421,12 +369,6 @@ export const routeTree = rootRoute
         "/export/"
       ]
     },
-    "/merge": {
-      "filePath": "merge/route.tsx",
-      "children": [
-        "/merge/"
-      ]
-    },
     "/rotate": {
       "filePath": "rotate/route.tsx",
       "children": [
@@ -448,10 +390,6 @@ export const routeTree = rootRoute
     "/export/": {
       "filePath": "export/index.tsx",
       "parent": "/export"
-    },
-    "/merge/": {
-      "filePath": "merge/index.tsx",
-      "parent": "/merge"
     },
     "/rotate/": {
       "filePath": "rotate/index.tsx",
