@@ -16,6 +16,7 @@ export type ActionT = {
 type MainContextT = {
 	originalImage64: string;
 	previewImage64: string;
+	applyFilters: (actions: ActionT[], imageToModify: string) => string;
 
 	// REFACTORED PART:
 	actions: ActionT[];
@@ -29,6 +30,7 @@ type MainContextT = {
 const defaultContext: MainContextT = {
 	originalImage64: '',
 	previewImage64: '',
+	applyFilters: () => '',
 
 	// REFACTORED PART:
 	actions: [],

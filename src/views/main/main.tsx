@@ -151,6 +151,7 @@ const MainView = () => {
 			value={{
 				originalImage64,
 				previewImage64,
+				applyFilters,
 
 				// REFACTORED:
 				actions,
