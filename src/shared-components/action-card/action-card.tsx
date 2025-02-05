@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useMemo, useState, useContext } from 'react';
 
 import MainContext from '@views/context';
 import previewImg from '@images/preview.jpg';
@@ -15,41 +15,63 @@ const normalizeAngle = (angle: number) => {
 };
 
 // @TODO: Replace images with something like icons
-const ActionCard = ({ actionId, label, type }: Props) => {
-	const [isDisabled, setIsDisabled] = useState(false);
-	const { activeAction, setActiveAction, strengths, setStrengths } = useContext(MainContext);
-	const isActive = activeAction === actionId;
+const ActionCard = ({ actionId, label }: Props) => {
+	const [isActive, setIsActive] = useState(false);
+	const { actions, addAction } = useContext(MainContext);
+
+	const action = useMemo(() => {
+		return actions.find(({ action_id }) => action_id === actionId);
+	}, [actions, actionId]);
 
 	const onPressHd = () => {
-		setIsDisabled(true);
+		setIsActive(true);
 
-		if (actionId === 'rotate-left') {
-			setStrengths('angle', normalizeAngle(strengths.angle - 90));
+		switch (actionId) {
+			case 'rotate-left': {
+				const weight = (Number.isInteger(action?.weight) ? action?.weight : 0) as number;
+
+				addAction({
+					action_id: actionId,
+					weight: normalizeAngle(weight - 90)
+				});
+
+				break;
+			}
+
+			case 'rotate-right': {
+				const weight = (Number.isInteger(action?.weight) ? action?.weight : 0) as number;
+
+				addAction({
+					action_id: actionId,
+					weight: normalizeAngle(weight + 90)
+				});
+
+				break;
+			}
+
+			case 'mirror-horizontal': {
+				addAction({ action_id: actionId, weight: 'horizontal' });
+				break;
+			}
+
+			case 'mirror-vertical': {
+				addAction({ action_id: actionId, weight: 'vertical' });
+
+				break;
+			}
+
+			default:
+				break;
 		}
-
-		if (actionId === 'rotate-right') {
-			setStrengths('angle', normalizeAngle(strengths.angle + 90));
-		}
-
-		if (actionId === 'mirror-horizontal') {
-			setStrengths('isFlippedH', strengths.isFlippedH ? false : true);
-		}
-
-		if (actionId === 'mirror-vertical') {
-			setStrengths('isFlippedV', strengths.isFlippedV ? false : true);
-		}
-
-		setActiveAction(actionId);
 
 		window.setTimeout(() => {
-			setActiveAction('');
-			setIsDisabled(false);
+			setIsActive(false);
 		}, 150);
 	};
 
 	return (
 		<Root>
-			<ActiveArea as={AriaButton} onPress={onPressHd} isDisabled={isDisabled}>
+			<ActiveArea as={AriaButton} onPress={onPressHd} isDisabled={isActive}>
 				<Preview $isActive={isActive}>
 					{/* @ts-ignore */}
 					<Img src={previewImg} alt="Preview" />

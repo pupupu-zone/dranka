@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import MainContext from '@views/context';
 
@@ -8,52 +8,43 @@ import StrengthSlider from '@shared/strength-slider';
 import Root, { SliderRoot } from './effects.styles';
 
 const FILTERS = [
-	{
-		id: 'original',
-		label: 'Original',
-		type: 'filter'
-	},
-	{
-		id: 'invert',
-		label: 'Invert',
-		type: 'filter'
-	},
-	{
-		id: 'sepia',
-		label: 'Sepia',
-		type: 'filter'
-	},
-	{
-		id: 'blur',
-		label: 'Blur',
-		type: 'filter'
-	}
+	{ id: 'reset', label: 'Original' },
+	{ id: 'invert', label: 'Invert' },
+	{ id: 'sepia', label: 'Sepia' },
+	{ id: 'blur', label: 'Blur' }
 ];
 
-const EffectsActions = () => {
-	const { originalImage64, appliedFilters, activeSlider } = useContext(MainContext);
+const FILTER_IDS = FILTERS.map((filter) => filter.id);
 
-	if (!originalImage64) {
+const EffectsActions = () => {
+	const { previewImage64, actions } = useContext(MainContext);
+
+	const isSliderActive = useMemo(() => {
+		const isActive = actions.some((action) => {
+			return FILTER_IDS.includes(action.action_id) && action.is_slider_active;
+		});
+
+		return isActive;
+	}, [actions]);
+
+	if (!previewImage64) {
 		return null;
 	}
 
 	return (
 		<Root>
-			{Boolean(activeSlider) && (
+			{isSliderActive && (
 				<SliderRoot>
 					<StrengthSlider />
 				</SliderRoot>
 			)}
 
 			<FiltersList>
-				{FILTERS.map((filter) => (
-					<FilterCard
-						key={filter.id}
-						isActive={appliedFilters.includes(filter.id)}
-						effectId={filter.id}
-						label={filter.label}
-					/>
-				))}
+				{FILTERS.map((filter) => {
+					const isActive = actions.some((action) => action.action_id === filter.id);
+
+					return <FilterCard key={filter.id} isActive={isActive} effectId={filter.id} label={filter.label} />;
+				})}
 			</FiltersList>
 		</Root>
 	);

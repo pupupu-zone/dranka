@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import MainContext from '@views/context';
 import previewImg from '@images/preview.jpg';
@@ -9,19 +9,32 @@ import Root, { AdjustBtn, Label, Preview, Img, ActiveArea } from './filter-card.
 import type { Props } from './filter-card.d';
 
 const FilterCard = ({ effectId, label, isActive }: Props) => {
-	const { activeSlider, toggleFilter, setActiveSlider } = useContext(MainContext);
+	const { actions, addAction, removeAction, setSliderActive, setReset } = useContext(MainContext);
+
+	const action = useMemo(() => {
+		const action = actions.find(({ action_id }) => action_id === effectId);
+
+		return action;
+	}, [actions, effectId]);
 
 	const onPressHd = () => {
-		toggleFilter(effectId);
+		if (effectId === 'reset') {
+			return setReset();
+		}
+
+		if (isActive) {
+			removeAction(effectId);
+		} else {
+			addAction({
+				action_id: effectId,
+				weight: 100,
+				highlight_time: 0
+			});
+		}
 	};
 
 	const onAdjustPressHd = () => {
-		if (activeSlider === effectId) {
-			setActiveSlider('');
-			return;
-		}
-
-		setActiveSlider(effectId);
+		setSliderActive(effectId, !action?.is_slider_active);
 	};
 
 	return (
@@ -36,8 +49,8 @@ const FilterCard = ({ effectId, label, isActive }: Props) => {
 			</ActiveArea>
 
 			<AdjustBtn
-				$isActive={activeSlider === effectId}
-				isDisabled={effectId === 'original' || !isActive}
+				$isActive={action?.is_slider_active ?? false}
+				isDisabled={effectId === 'reset' || !isActive}
 				as={AriaButton}
 				onPress={onAdjustPressHd}
 			>

@@ -6,29 +6,11 @@ import ActionCard from '@shared/action-card';
 import FiltersList from '@shared/filters-list';
 import Root from './rotate.styles';
 
-type ActionType = 'reset' | 'action' | 'fast-action';
-
-const ACTIONS: { id: string; label: string; type: ActionType }[] = [
-	{
-		id: 'rotate-left',
-		label: 'Left',
-		type: 'fast-action'
-	},
-	{
-		id: 'rotate-right',
-		label: 'Right',
-		type: 'fast-action'
-	},
-	{
-		id: 'mirror-horizontal',
-		label: 'Mirror H',
-		type: 'fast-action'
-	},
-	{
-		id: 'mirror-vertical',
-		label: 'Mirror V',
-		type: 'fast-action'
-	}
+const ACTIONS = [
+	{ id: 'rotate-left', label: 'Left' },
+	{ id: 'rotate-right', label: 'Right' },
+	{ id: 'mirror-horizontal', label: 'Mirror H' },
+	{ id: 'mirror-vertical', label: 'Mirror V' }
 ];
 
 const RotateActions = () => {
@@ -42,7 +24,7 @@ const RotateActions = () => {
 		<Root>
 			<FiltersList>
 				{ACTIONS.map((action) => (
-					<ActionCard key={action.id} actionId={action.id} label={action.label} type={action.type} />
+					<ActionCard key={action.id} actionId={action.id} label={action.label} />
 				))}
 			</FiltersList>
 		</Root>

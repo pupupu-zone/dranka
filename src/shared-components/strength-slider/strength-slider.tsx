@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import MainContext from '@views/context';
@@ -12,48 +12,40 @@ import {
 } from 'react-aria-components';
 import Root, { InnerRoot, OkBtn, Slider, Track, Thumb, Info } from './strength-slider.styles';
 
-const useStrengthValue = (): [number, (next: number) => void] => {
-	const { strengths, activeSlider, setStrengths } = useContext(MainContext);
-	const [innerValue, setInnerValue] = useState(strengths[activeSlider] || 100);
+const StrengthSlider = (props: Record<string, unknown>) => {
+	const { actions, setSliderActive, updateAction } = useContext(MainContext);
+	const action = useMemo(() => actions.find(({ is_slider_active }) => is_slider_active), [actions]);
+	const actionId = action?.action_id || '';
+	const [innerValue, setInnerValue] = useState<number>(0);
 	const [value] = useDebounce(innerValue, 500);
 
 	useEffect(() => {
-		if (!activeSlider) return;
-
-		setStrengths(activeSlider, value);
-	}, [value]);
+		setInnerValue(action?.weight);
+	}, [actionId]);
 
 	useEffect(() => {
-		if (!activeSlider) return;
+		updateAction({ action_id: actionId, weight: value });
+	}, [value]);
 
-		setInnerValue(strengths[activeSlider] || 100);
-	}, [activeSlider]);
-
-	return [innerValue, setInnerValue];
-};
-
-const StrengthSlider = (props: Record<string, unknown>) => {
-	const [value, setValue] = useStrengthValue();
-	const { activeSlider, setActiveSlider } = useContext(MainContext);
-	const maxValue = activeSlider === 'blur' ? 30 : 100;
-	const step = activeSlider === 'blur' ? 1 : 5;
+	const maxValue = actionId === 'blur' ? 30 : 100;
+	const step = actionId === 'blur' ? 1 : 5;
 
 	const onChangeHd = (nextValue: number | number[]) => {
 		const valueToSet = Array.isArray(nextValue) ? nextValue[0] : nextValue;
 
-		setValue(valueToSet);
+		setInnerValue(valueToSet);
 	};
 
 	const closeHd = () => {
-		setActiveSlider('');
+		setSliderActive(actionId, false);
 	};
 
 	return (
 		<Root {...props}>
 			<InnerRoot>
-				<Info>{value}</Info>
+				<Info>{innerValue}</Info>
 
-				<Slider as={AriaSlider} value={value} onChange={onChangeHd} minValue={0} maxValue={maxValue} step={step}>
+				<Slider as={AriaSlider} value={innerValue} onChange={onChangeHd} minValue={0} maxValue={maxValue} step={step}>
 					<Track as={AriaTrack}>
 						<Thumb as={AriaThumb} />
 					</Track>

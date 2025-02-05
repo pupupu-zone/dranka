@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Outlet } from '@tanstack/react-router';
 
-import MainContext from '@views/context';
+import MainContext, { type ActionT } from '@views/context';
 import { grayscale, invert, sepia, blur, minify_image, rotate, flip } from '@wasm/dranka';
 
 import Navigation from './navigation';
@@ -10,20 +10,7 @@ import ImagePreview from './image-preview';
 import Root, { Main } from './main.styles';
 
 const MainView = () => {
-	const [activeAction, setActiveAction] = useState('');
-	const [activeSlider, setActiveSlider] = useState('');
-	const [strengths, setStrengths] = useState<Record<string, number>>({
-		grayscale: 100,
-		sepia: 100,
-		blur: 10,
-		invert: 100,
-		angle: 0,
-		isFlippedH: false,
-		isFlippedV: false
-	});
-	const [action, setAction] = useState('');
-	const [filters, setFilters] = useState<string[]>([]);
-
+	const [actions, setActions] = useState<ActionT[]>([]);
 	const fileReader = useRef(new FileReader());
 	const [compressedImage64, setCompressedImage64] = useState('');
 	const [originalImage64, setOriginalImage64] = useState('');
@@ -41,114 +28,119 @@ const MainView = () => {
 	}, []);
 
 	useEffect(() => {
-		const modifiedImage = applyFilters(filters, compressedImage64);
+		if (!compressedImage64) return;
 
-		setPreviewImage64(modifiedImage);
-	}, [filters, compressedImage64, strengths]);
+		setPreviewImage64(compressedImage64);
+	}, [compressedImage64]);
 
 	useEffect(() => {
-		if (!activeAction) return;
+		if (!compressedImage64) return;
 
-		const actionedImage = applyActions(activeAction, compressedImage64);
-		const modifiedImage = applyFilters(filters, actionedImage);
+		const modifiedImage = applyFilters(actions, compressedImage64);
+		// const actionedImage = applyActions(actions, modifiedImage);
 
 		setPreviewImage64(modifiedImage);
-	}, [activeAction, strengths.angle]);
+	}, [actions]);
 
-	const setStr = (key: string, value: number) => {
-		setStrengths({
-			...strengths,
-			[key]: value
-		});
-	};
-
-	const applyActions = (action: string, imageToModify: string) => {
-		if (action === 'rotate-right') {
-			const rotatedImage64 = rotate(imageToModify, strengths.angle);
-
-			return rotatedImage64;
-		}
-
-		if (action === 'rotate-left') {
-			const rotatedImage64 = rotate(imageToModify, strengths.angle);
-
-			return rotatedImage64;
-		}
-
-		if (action === 'mirror-horizontal') {
-			const shallFlip = strengths.isFlippedH;
-
-			const flippedImage64 = shallFlip ? flip(imageToModify, 'horizontal') : imageToModify;
-
-			return flippedImage64;
-		}
-
-		if (action === 'mirror-vertical') {
-			const shallFlip = strengths.isFlippedV;
-
-			const flippedImage64 = shallFlip ? flip(imageToModify, 'vertical') : imageToModify;
-
-			return flippedImage64;
-		}
-
-		return '';
-	};
-
-	const applyFilters = (filters: string[], imageToModify: string) => {
+	const applyFilters = (actions: ActionT[], imageToModify: string) => {
 		let modifiedImage = imageToModify;
 
-		if (filters.includes('grayscale')) {
-			const strength = strengths.grayscale / 100;
-			const grayImage64 = grayscale(modifiedImage, strength);
+		actions.forEach((action) => {
+			if (action.action_id === 'grayscale') {
+				const strength = action.weight / 100;
+				const grayImage64 = grayscale(modifiedImage, strength);
+				modifiedImage = grayImage64;
+			}
 
-			modifiedImage = grayImage64;
-		}
+			if (action.action_id === 'invert') {
+				const strength = action.weight / 100;
+				const invertImage = invert(modifiedImage, strength);
+				modifiedImage = invertImage;
+			}
 
-		if (filters.includes('invert')) {
-			const strength = strengths.invert / 100;
-			const invertImage = invert(modifiedImage, strength);
+			if (action.action_id === 'sepia') {
+				const strength = action.weight / 100;
+				const sepiaImage = sepia(modifiedImage, strength);
+				modifiedImage = sepiaImage;
+			}
 
-			modifiedImage = invertImage;
-		}
+			if (action.action_id === 'blur') {
+				const blurImage = blur(modifiedImage, action.weight);
+				modifiedImage = blurImage;
+			}
 
-		if (filters.includes('sepia')) {
-			const strength = strengths.sepia / 100;
-			const sepiaImage = sepia(modifiedImage, strength);
+			if (action.action_id === 'rotate-right') {
+				const rotatedImage64 = rotate(imageToModify, action.weight);
 
-			modifiedImage = sepiaImage;
-		}
+				modifiedImage = rotatedImage64;
+			}
 
-		if (filters.includes('blur')) {
-			const blurImage = blur(modifiedImage, strengths.blur);
+			if (action.action_id === 'rotate-left') {
+				const rotatedImage64 = rotate(imageToModify, action.weight);
 
-			modifiedImage = blurImage;
-		}
+				modifiedImage = rotatedImage64;
+			}
+
+			if (action.action_id === 'mirror-horizontal') {
+				const flippedImage64 = flip(imageToModify, action.weight);
+
+				modifiedImage = flippedImage64;
+			}
+
+			if (action.action_id === 'mirror-vertical') {
+				const flippedImage64 = flip(imageToModify, action.weight);
+
+				modifiedImage = flippedImage64;
+			}
+		});
 
 		return modifiedImage;
 	};
 
-	const addFilter = (filter: string) => {
-		setFilters(Array.from(new Set([...filters, filter])));
+	// REFACTORED:
+	const addAction = ({ action_id, weight, highlight_time, is_slider_active }: Partial<ActionT>) => {
+		const cleanedActions = actions.filter((a) => a.action_id !== action_id);
+		const action: ActionT = {
+			action_id: action_id || '',
+			weight: weight !== undefined ? weight : 100,
+			highlight_time: highlight_time !== undefined ? highlight_time : 150,
+			is_slider_active: typeof is_slider_active === 'boolean' ? is_slider_active : false
+		};
+		setActions([...cleanedActions, action]);
 	};
 
-	const removeFilter = (filter: string) => {
-		setFilters(filters.filter((f) => f !== filter));
+	const updateAction = (newAction: Partial<ActionT>) => {
+		const updatedActions = actions.map((action) => {
+			if (action.action_id === newAction.action_id) {
+				return {
+					...action,
+					...newAction
+				};
+			}
+
+			return action;
+		});
+
+		setActions(updatedActions);
 	};
 
-	const resetFilters = () => {
-		setFilters([]);
+	const setSliderActive = (actionId: ActionT['action_id'], isSliderActive: boolean) => {
+		const updatedActions = actions.map((action) => {
+			return {
+				...action,
+				is_slider_active: action.action_id === actionId ? isSliderActive : false
+			};
+		});
+
+		setActions(updatedActions);
 	};
 
-	const toggleFilter = (filterId: string) => {
-		setActiveSlider('');
+	const setReset = () => {
+		setActions([]);
+	};
 
-		if (filterId === 'original') {
-			resetFilters();
-		} else if (filters.includes(filterId)) {
-			removeFilter(filterId);
-		} else {
-			addFilter(filterId);
-		}
+	const removeAction = (actionId: ActionT['action_id']) => {
+		setActions(actions.filter((a) => a.action_id !== actionId));
 	};
 
 	return (
@@ -158,21 +150,14 @@ const MainView = () => {
 			value={{
 				originalImage64,
 				previewImage64,
-				setAction,
-				action,
-				addFilter,
-				removeFilter,
-				appliedFilters: filters,
-				resetFilters,
-				toggleFilter,
-				applyFilters,
-				strengths,
-				setStrengths: setStr,
-				activeSlider,
-				setActiveSlider,
-				activeAction,
-				setActiveAction,
-				applyActions
+
+				// REFACTORED:
+				actions,
+				addAction,
+				removeAction,
+				updateAction,
+				setSliderActive,
+				setReset
 			}}
 		>
 			<Root>

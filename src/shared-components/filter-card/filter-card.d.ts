@@ -1,5 +1,7 @@
+import type { ActionT } from '@views/context';
+
 export type Props = {
-	effectId: string;
+	effectId: ActionT['action_id'];
 	label: string;
 	isActive: boolean;
 };
