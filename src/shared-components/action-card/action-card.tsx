@@ -17,7 +17,7 @@ const normalizeAngle = (angle: number) => {
 // @TODO: Replace images with something like icons
 const ActionCard = ({ actionId, label }: Props) => {
 	const [isActive, setIsActive] = useState(false);
-	const { actions, addAction } = useContext(MainContext);
+	const { actions, addAction, removeAction } = useContext(MainContext);
 
 	const action = useMemo(() => {
 		return actions.find(({ action_id }) => action_id === actionId);
@@ -28,34 +28,55 @@ const ActionCard = ({ actionId, label }: Props) => {
 
 		switch (actionId) {
 			case 'rotate-left': {
-				const weight = (Number.isInteger(action?.weight) ? action?.weight : 0) as number;
+				const rotationAction = actions.find(({ action_id }) => action_id === 'rotate');
+				const weight = (Number.isInteger(rotationAction?.weight) ? rotationAction?.weight : 0) as number;
+				const nextWeight = weight - 90;
 
-				addAction({
-					action_id: actionId,
-					weight: normalizeAngle(weight - 90)
-				});
+				if (nextWeight === 0) {
+					removeAction('rotate');
+				} else {
+					addAction({
+						action_id: 'rotate',
+						weight: normalizeAngle(nextWeight)
+					});
+				}
 
 				break;
 			}
 
 			case 'rotate-right': {
-				const weight = (Number.isInteger(action?.weight) ? action?.weight : 0) as number;
+				const rotationAction = actions.find(({ action_id }) => action_id === 'rotate');
+				const weight = (Number.isInteger(rotationAction?.weight) ? rotationAction?.weight : 0) as number;
+				const nextWeight = weight + 90;
 
-				addAction({
-					action_id: actionId,
-					weight: normalizeAngle(weight + 90)
-				});
+				if (nextWeight === 0) {
+					removeAction('rotate');
+				} else {
+					addAction({
+						action_id: 'rotate',
+						weight: normalizeAngle(nextWeight)
+					});
+				}
 
 				break;
 			}
 
 			case 'mirror-horizontal': {
-				addAction({ action_id: actionId, weight: 'horizontal' });
+				if (action?.weight) {
+					removeAction('mirror-horizontal');
+				} else {
+					addAction({ action_id: 'mirror-horizontal', weight: 'horizontal' });
+				}
+
 				break;
 			}
 
 			case 'mirror-vertical': {
-				addAction({ action_id: actionId, weight: 'vertical' });
+				if (action?.weight) {
+					removeAction('mirror-vertical');
+				} else {
+					addAction({ action_id: 'mirror-vertical', weight: 'vertical' });
+				}
 
 				break;
 			}

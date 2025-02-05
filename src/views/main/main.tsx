@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, act } from 'react';
 import { Outlet } from '@tanstack/react-router';
 
 import MainContext, { type ActionT } from '@views/context';
@@ -33,15 +33,13 @@ const MainView = () => {
 		setPreviewImage64(compressedImage64);
 	}, [compressedImage64]);
 
-	const actionsToReapply = React.useMemo(() => {
-		const s = actions.map((action) => {
-			return {
-				action_id: action.action_id,
-				weight: action.weight
-			};
-		});
+	const hasFiltersChanged = React.useMemo(() => {
+		const key = actions.map((action) => ({
+			action_id: action.action_id,
+			weight: action.weight
+		}));
 
-		return JSON.stringify(s);
+		return JSON.stringify(key);
 	}, [actions]);
 
 	useEffect(() => {
@@ -50,7 +48,7 @@ const MainView = () => {
 		const modifiedImage = applyFilters(actions, compressedImage64);
 
 		setPreviewImage64(modifiedImage);
-	}, [actionsToReapply]);
+	}, [hasFiltersChanged]);
 
 	const applyFilters = (actions: ActionT[], imageToModify: string) => {
 		let modifiedImage = imageToModify;
@@ -79,26 +77,20 @@ const MainView = () => {
 				modifiedImage = blurImage;
 			}
 
-			if (action.action_id === 'rotate-right') {
-				const rotatedImage64 = rotate(imageToModify, action.weight);
-
-				modifiedImage = rotatedImage64;
-			}
-
-			if (action.action_id === 'rotate-left') {
+			if (action.action_id === 'rotate') {
 				const rotatedImage64 = rotate(imageToModify, action.weight);
 
 				modifiedImage = rotatedImage64;
 			}
 
 			if (action.action_id === 'mirror-horizontal') {
-				const flippedImage64 = flip(imageToModify, action.weight);
+				const flippedImage64 = flip(imageToModify, 'horizontal');
 
 				modifiedImage = flippedImage64;
 			}
 
 			if (action.action_id === 'mirror-vertical') {
-				const flippedImage64 = flip(imageToModify, action.weight);
+				const flippedImage64 = flip(imageToModify, 'vertical');
 
 				modifiedImage = flippedImage64;
 			}
