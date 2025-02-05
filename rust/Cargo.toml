@@ -8,6 +8,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 base64 = "0.22.1"
+colors-transform = "0.2.11"
 image = "0.25.5"
 regex = "1.11.1"
 wasm-bindgen = "0.2.100"

@@ -20,8 +20,6 @@ pub fn invert(init_base64: &str, strength: f32) -> String {
 }
 
 fn apply_invert(img: &DynamicImage, strength: f32) -> DynamicImage {
-    let weight = 1.0 - strength;
-
     let dynamic_image = match img.color() {
         ColorType::Rgb8 | ColorType::Rgb16 | ColorType::Rgb32F => {
             let rgb_img = img.to_rgb8();

@@ -11,3 +11,6 @@ pub use init::*;
 
 mod rotation;
 pub use rotation::*;
+
+mod color;
+pub use color::*;

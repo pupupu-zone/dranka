@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Outlet } from '@tanstack/react-router';
 
 import MainContext, { type ActionT } from '@views/context';
-import { grayscale, invert, sepia, blur, minify_image, rotate, flip } from '@wasm/dranka';
+import { grayscale, invert, sepia, blur, minify_image, rotate, flip, astia_soft } from '@wasm/dranka';
 
 import Navigation from './navigation';
 import UploadImage from './upload-image';
@@ -90,6 +90,12 @@ const MainView = () => {
 					if (typeof action.weight === 'number') {
 						modifiedImage = blur(modifiedImage, action.weight);
 					}
+					break;
+				}
+				case 'astia-soft': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+
+					modifiedImage = astia_soft(modifiedImage, strength);
 					break;
 				}
 			}

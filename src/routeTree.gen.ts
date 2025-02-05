@@ -15,12 +15,14 @@ import { Route as RotateRouteImport } from './core/routes/rotate/route'
 import { Route as ExportRouteImport } from './core/routes/export/route'
 import { Route as EffectsRouteImport } from './core/routes/effects/route'
 import { Route as CropRouteImport } from './core/routes/crop/route'
+import { Route as ColorRouteImport } from './core/routes/color/route'
 import { Route as BwRouteImport } from './core/routes/bw/route'
 import { Route as IndexImport } from './core/routes/index'
 import { Route as RotateIndexImport } from './core/routes/rotate/index'
 import { Route as ExportIndexImport } from './core/routes/export/index'
 import { Route as EffectsIndexImport } from './core/routes/effects/index'
 import { Route as CropIndexImport } from './core/routes/crop/index'
+import { Route as ColorIndexImport } from './core/routes/color/index'
 import { Route as BwIndexImport } from './core/routes/bw/index'
 
 // Create/Update Routes
@@ -46,6 +48,12 @@ const EffectsRouteRoute = EffectsRouteImport.update({
 const CropRouteRoute = CropRouteImport.update({
   id: '/crop',
   path: '/crop',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ColorRouteRoute = ColorRouteImport.update({
+  id: '/color',
+  path: '/color',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -85,6 +93,12 @@ const CropIndexRoute = CropIndexImport.update({
   getParentRoute: () => CropRouteRoute,
 } as any)
 
+const ColorIndexRoute = ColorIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ColorRouteRoute,
+} as any)
+
 const BwIndexRoute = BwIndexImport.update({
   id: '/',
   path: '/',
@@ -107,6 +121,13 @@ declare module '@tanstack/react-router' {
       path: '/bw'
       fullPath: '/bw'
       preLoaderRoute: typeof BwRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/color': {
+      id: '/color'
+      path: '/color'
+      fullPath: '/color'
+      preLoaderRoute: typeof ColorRouteImport
       parentRoute: typeof rootRoute
     }
     '/crop': {
@@ -143,6 +164,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/bw/'
       preLoaderRoute: typeof BwIndexImport
       parentRoute: typeof BwRouteImport
+    }
+    '/color/': {
+      id: '/color/'
+      path: '/'
+      fullPath: '/color/'
+      preLoaderRoute: typeof ColorIndexImport
+      parentRoute: typeof ColorRouteImport
     }
     '/crop/': {
       id: '/crop/'
@@ -187,6 +215,18 @@ const BwRouteRouteChildren: BwRouteRouteChildren = {
 
 const BwRouteRouteWithChildren =
   BwRouteRoute._addFileChildren(BwRouteRouteChildren)
+
+interface ColorRouteRouteChildren {
+  ColorIndexRoute: typeof ColorIndexRoute
+}
+
+const ColorRouteRouteChildren: ColorRouteRouteChildren = {
+  ColorIndexRoute: ColorIndexRoute,
+}
+
+const ColorRouteRouteWithChildren = ColorRouteRoute._addFileChildren(
+  ColorRouteRouteChildren,
+)
 
 interface CropRouteRouteChildren {
   CropIndexRoute: typeof CropIndexRoute
@@ -239,11 +279,13 @@ const RotateRouteRouteWithChildren = RotateRouteRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bw': typeof BwRouteRouteWithChildren
+  '/color': typeof ColorRouteRouteWithChildren
   '/crop': typeof CropRouteRouteWithChildren
   '/effects': typeof EffectsRouteRouteWithChildren
   '/export': typeof ExportRouteRouteWithChildren
   '/rotate': typeof RotateRouteRouteWithChildren
   '/bw/': typeof BwIndexRoute
+  '/color/': typeof ColorIndexRoute
   '/crop/': typeof CropIndexRoute
   '/effects/': typeof EffectsIndexRoute
   '/export/': typeof ExportIndexRoute
@@ -253,6 +295,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bw': typeof BwIndexRoute
+  '/color': typeof ColorIndexRoute
   '/crop': typeof CropIndexRoute
   '/effects': typeof EffectsIndexRoute
   '/export': typeof ExportIndexRoute
@@ -263,11 +306,13 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/bw': typeof BwRouteRouteWithChildren
+  '/color': typeof ColorRouteRouteWithChildren
   '/crop': typeof CropRouteRouteWithChildren
   '/effects': typeof EffectsRouteRouteWithChildren
   '/export': typeof ExportRouteRouteWithChildren
   '/rotate': typeof RotateRouteRouteWithChildren
   '/bw/': typeof BwIndexRoute
+  '/color/': typeof ColorIndexRoute
   '/crop/': typeof CropIndexRoute
   '/effects/': typeof EffectsIndexRoute
   '/export/': typeof ExportIndexRoute
@@ -279,26 +324,30 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/bw'
+    | '/color'
     | '/crop'
     | '/effects'
     | '/export'
     | '/rotate'
     | '/bw/'
+    | '/color/'
     | '/crop/'
     | '/effects/'
     | '/export/'
     | '/rotate/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bw' | '/crop' | '/effects' | '/export' | '/rotate'
+  to: '/' | '/bw' | '/color' | '/crop' | '/effects' | '/export' | '/rotate'
   id:
     | '__root__'
     | '/'
     | '/bw'
+    | '/color'
     | '/crop'
     | '/effects'
     | '/export'
     | '/rotate'
     | '/bw/'
+    | '/color/'
     | '/crop/'
     | '/effects/'
     | '/export/'
@@ -309,6 +358,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BwRouteRoute: typeof BwRouteRouteWithChildren
+  ColorRouteRoute: typeof ColorRouteRouteWithChildren
   CropRouteRoute: typeof CropRouteRouteWithChildren
   EffectsRouteRoute: typeof EffectsRouteRouteWithChildren
   ExportRouteRoute: typeof ExportRouteRouteWithChildren
@@ -318,6 +368,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BwRouteRoute: BwRouteRouteWithChildren,
+  ColorRouteRoute: ColorRouteRouteWithChildren,
   CropRouteRoute: CropRouteRouteWithChildren,
   EffectsRouteRoute: EffectsRouteRouteWithChildren,
   ExportRouteRoute: ExportRouteRouteWithChildren,
@@ -336,6 +387,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/bw",
+        "/color",
         "/crop",
         "/effects",
         "/export",
@@ -349,6 +401,12 @@ export const routeTree = rootRoute
       "filePath": "bw/route.tsx",
       "children": [
         "/bw/"
+      ]
+    },
+    "/color": {
+      "filePath": "color/route.tsx",
+      "children": [
+        "/color/"
       ]
     },
     "/crop": {
@@ -378,6 +436,10 @@ export const routeTree = rootRoute
     "/bw/": {
       "filePath": "bw/index.tsx",
       "parent": "/bw"
+    },
+    "/color/": {
+      "filePath": "color/index.tsx",
+      "parent": "/color"
     },
     "/crop/": {
       "filePath": "crop/index.tsx",

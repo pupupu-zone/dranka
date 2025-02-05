@@ -13,7 +13,7 @@ const Navigation = () => {
 						B&W
 					</Header>
 
-					<Header as={Link} to="/color" activeProps={{ className: 'active' }} disabled>
+					<Header as={Link} to="/color" activeProps={{ className: 'active' }}>
 						Color
 					</Header>
 
