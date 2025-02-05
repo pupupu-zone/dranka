@@ -16,7 +16,7 @@ const StrengthSlider = (props: Record<string, unknown>) => {
 	const { actions, setSliderActive, updateAction } = useContext(MainContext);
 	const action = useMemo(() => actions.find(({ is_slider_active }) => is_slider_active), [actions]);
 	const actionId = action?.action_id || '';
-	const [innerValue, setInnerValue] = useState<number>(0);
+	const [innerValue, setInnerValue] = useState<number>(action?.weight);
 	const [value] = useDebounce(innerValue, 500);
 
 	useEffect(() => {

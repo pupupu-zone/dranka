@@ -33,14 +33,24 @@ const MainView = () => {
 		setPreviewImage64(compressedImage64);
 	}, [compressedImage64]);
 
+	const actionsToReapply = React.useMemo(() => {
+		const s = actions.map((action) => {
+			return {
+				action_id: action.action_id,
+				weight: action.weight
+			};
+		});
+
+		return JSON.stringify(s);
+	}, [actions]);
+
 	useEffect(() => {
 		if (!compressedImage64) return;
 
 		const modifiedImage = applyFilters(actions, compressedImage64);
-		// const actionedImage = applyActions(actions, modifiedImage);
 
 		setPreviewImage64(modifiedImage);
-	}, [actions]);
+	}, [actionsToReapply]);
 
 	const applyFilters = (actions: ActionT[], imageToModify: string) => {
 		let modifiedImage = imageToModify;

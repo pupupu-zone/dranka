@@ -27,7 +27,7 @@ const FilterCard = ({ effectId, label, isActive }: Props) => {
 		} else {
 			addAction({
 				action_id: effectId,
-				weight: 100,
+				weight: effectId === 'blur' ? 5 : 100,
 				highlight_time: 0
 			});
 		}
