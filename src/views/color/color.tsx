@@ -11,7 +11,8 @@ import Root, { SliderRoot, Test, Scroll, InnerList } from './color.styles';
 
 const FILTERS = [
 	{ id: 'reset', label: 'Reset all' },
-	{ id: 'astia-soft', label: 'A-Soft' }
+	{ id: 'astia-soft', label: 'A-Soft' },
+	{ id: 'nostalgic', label: 'Nostalgic' }
 ];
 
 const FILTER_IDS = FILTERS.map((filter) => filter.id);
