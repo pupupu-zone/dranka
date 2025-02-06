@@ -1,7 +1,7 @@
 import { useUnit } from 'effector-react';
 import $actions from '@store/actions';
 
-import { grayscale, invert, sepia, blur, rotate, flip, astia_soft, nostalgic_neg } from '@wasm/dranka';
+import { grayscale, invert, sepia, blur, rotate, flip, astia_soft, nostalgic_neg, neg_hi } from '@wasm/dranka';
 
 const useApplyFilters = () => {
 	const actions = useUnit($actions);
@@ -58,6 +58,12 @@ const useApplyFilters = () => {
 					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
 
 					modifiedImage = nostalgic_neg(modifiedImage, strength);
+					break;
+				}
+				case 'neg-hi': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+
+					modifiedImage = neg_hi(modifiedImage, strength);
 					break;
 				}
 			}

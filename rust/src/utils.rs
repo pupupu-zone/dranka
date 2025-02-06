@@ -34,3 +34,19 @@ pub fn create_image(wrk_image: DynamicImage, extension: ImageFormat) -> Cursor<V
 
     buffer
 }
+
+pub fn proceed_image(
+    strength: f32,
+    init_base64: &str,
+    apply_preset: &dyn Fn(&DynamicImage, f32) -> DynamicImage,
+) -> String {
+    let strength = strength.clamp(0.0, 1.0);
+
+    let img_vector = base64_to_vec(&init_base64);
+    let loaded_img = image::load_from_memory(&img_vector).expect("Invalid image data");
+    let modified_image = apply_preset(&loaded_img, strength);
+    let extension = image::guess_format(&img_vector).expect("Failed to guess format");
+    let image_to_send = create_image(modified_image, extension);
+
+    vec_to_base64(image_to_send.into_inner(), extension)
+}
