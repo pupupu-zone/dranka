@@ -1,7 +1,7 @@
 import React from 'react';
 import { useUnit } from 'effector-react';
 
-import { $images } from '@store';
+import $images from '@store/images';
 
 import ActionCard from '@shared/action-card';
 import FiltersList from '@shared/filters-list';

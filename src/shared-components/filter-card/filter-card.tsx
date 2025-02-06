@@ -1,6 +1,8 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { useUnit } from 'effector-react';
 
-import MainContext from '@views/context';
+import $actions, { addAction, removeAction, setSliderActive, setReset } from '@store/actions';
+
 import previewImg from '@images/preview.jpg';
 
 import { Button as AriaButton } from 'react-aria-components';
@@ -9,7 +11,7 @@ import Root, { AdjustBtn, Label, Preview, Img, ActiveArea } from './filter-card.
 import type { Props } from './filter-card.d';
 
 const FilterCard = ({ effectId, label, isActive }: Props) => {
-	const { actions, addAction, removeAction, setSliderActive, setReset } = useContext(MainContext);
+	const actions = useUnit($actions);
 
 	const action = useMemo(() => {
 		const action = actions.find(({ action_id }) => action_id === effectId);
@@ -34,7 +36,10 @@ const FilterCard = ({ effectId, label, isActive }: Props) => {
 	};
 
 	const onAdjustPressHd = () => {
-		setSliderActive(effectId, !action?.is_slider_active);
+		setSliderActive({
+			action_id: effectId,
+			is_slider_active: !action?.is_slider_active
+		});
 	};
 
 	return (

@@ -1,6 +1,8 @@
-import React, { useMemo, useState, useContext } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useUnit } from 'effector-react';
 
-import MainContext from '@views/context';
+import $actions, { addAction, removeAction } from '@store/actions';
+
 import previewImg from '@images/preview.jpg';
 
 import { Button as AriaButton } from 'react-aria-components';
@@ -17,7 +19,7 @@ const normalizeAngle = (angle: number) => {
 // @TODO: Replace images with something like icons
 const ActionCard = ({ actionId, label }: Props) => {
 	const [isActive, setIsActive] = useState(false);
-	const { actions, addAction, removeAction } = useContext(MainContext);
+	const actions = useUnit($actions);
 
 	const action = useMemo(() => {
 		return actions.find(({ action_id }) => action_id === actionId);

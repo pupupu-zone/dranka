@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useUnit } from 'effector-react';
 
-import { $images } from '@store';
+import $images from '@store/images';
 
 import Root, { Canvas } from './image-preview.styles';
 

@@ -1,4 +1,4 @@
-import type { ActionT } from '@views/context';
+import type { ActionT } from '@store/types';
 
 export type Props = {
 	effectId: ActionT['action_id'];

@@ -1,7 +1,8 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useUnit } from 'effector-react';
-import { $images } from '@store';
-import MainContext from '@views/context';
+
+import $images from '@store/images';
+import $actions from '@store/actions';
 
 import { HorizontalScroll } from '@ui';
 import FilterCard from '@shared/filter-card';
@@ -17,7 +18,7 @@ const FILTER_IDS = FILTERS.map((filter) => filter.id);
 
 const ColorActions = () => {
 	const { preview64 } = useUnit($images);
-	const { actions } = useContext(MainContext);
+	const actions = useUnit($actions);
 
 	const isSliderActive = useMemo(() => {
 		const isActive = actions.some((action) => {

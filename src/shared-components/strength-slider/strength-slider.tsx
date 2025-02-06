@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDebounce } from 'use-debounce';
+import { useUnit } from 'effector-react';
 
-import MainContext from '@views/context';
+import $actions, { setSliderActive, updateAction } from '@store/actions';
 
 import { Icon } from '@ui';
 import {
@@ -13,7 +14,7 @@ import {
 import Root, { InnerRoot, OkBtn, Slider, Track, Thumb, Info } from './strength-slider.styles';
 
 const StrengthSlider = (props: Record<string, unknown>) => {
-	const { actions, setSliderActive, updateAction } = useContext(MainContext);
+	const actions = useUnit($actions);
 	const action = useMemo(() => actions.find(({ is_slider_active }) => is_slider_active), [actions]);
 	const actionId = action?.action_id || '';
 	const [innerValue, setInnerValue] = useState<number>(action?.weight);
@@ -37,7 +38,10 @@ const StrengthSlider = (props: Record<string, unknown>) => {
 	};
 
 	const closeHd = () => {
-		setSliderActive(actionId, false);
+		setSliderActive({
+			action_id: actionId,
+			is_slider_active: false
+		});
 	};
 
 	return (
