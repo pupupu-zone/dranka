@@ -3,6 +3,12 @@ use wasm_bindgen::prelude::*;
 
 use crate::utils;
 
+const SEPIA_MATRIX: [[f32; 3]; 3] = [
+    [0.393, 0.769, 0.189], // RR RG RB
+    [0.349, 0.686, 0.168], // GR GG GB
+    [0.272, 0.534, 0.131], // BR BG BB
+];
+
 #[wasm_bindgen]
 pub fn sepia(init_base64: &str, strength: f32) -> String {
     if init_base64.is_empty() {
@@ -21,9 +27,23 @@ pub fn sepia(init_base64: &str, strength: f32) -> String {
     utils::vec_to_base64(image_to_send.into_inner(), extension)
 }
 
-fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
-    let weight = 1.0 - strength;
+fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
+    let sepia_r =
+        (r * SEPIA_MATRIX[0][0] + g * SEPIA_MATRIX[0][1] + b * SEPIA_MATRIX[0][2]).min(255.0);
+    let sepia_g =
+        (r * SEPIA_MATRIX[1][0] + g * SEPIA_MATRIX[1][1] + b * SEPIA_MATRIX[1][2]).min(255.0);
+    let sepia_b =
+        (r * SEPIA_MATRIX[2][0] + g * SEPIA_MATRIX[2][1] + b * SEPIA_MATRIX[2][2]).min(255.0);
 
+    // Linear interpolation between original RGB and the sepia one
+    let r = (1.0 - strength) * r + strength * sepia_r;
+    let g = (1.0 - strength) * g + strength * sepia_g;
+    let b = (1.0 - strength) * b + strength * sepia_b;
+
+    (r as u8, g as u8, b as u8)
+}
+
+fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
     let dynamic_image = match img.color() {
         ColorType::Rgb8 | ColorType::Rgb16 | ColorType::Rgb32F => {
             let rgb_img = img.to_rgb8();
@@ -35,13 +55,7 @@ fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
                 let g = pixel[1] as f32;
                 let b = pixel[2] as f32;
 
-                let sepia_r = (0.393 * r + 0.769 * g + 0.189 * b).min(255.0);
-                let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
-                let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
-
-                let r = (r * weight + sepia_r * strength) as u8;
-                let g = (g * weight + sepia_g * strength) as u8;
-                let b = (b * weight + sepia_b * strength) as u8;
+                let (r, g, b) = proceed_pixel(r, g, b, strength);
 
                 output.put_pixel(x, y, Rgb([r, g, b]));
             }
@@ -59,13 +73,7 @@ fn apply_sepia(img: &DynamicImage, strength: f32) -> DynamicImage {
                 let b = pixel[2] as f32;
                 let a = pixel[3] as u8;
 
-                let sepia_r = (0.393 * r + 0.769 * g + 0.189 * b).min(255.0);
-                let sepia_g = (0.349 * r + 0.686 * g + 0.168 * b).min(255.0);
-                let sepia_b = (0.272 * r + 0.534 * g + 0.131 * b).min(255.0);
-
-                let r = (r * weight + sepia_r * strength) as u8;
-                let g = (g * weight + sepia_g * strength) as u8;
-                let b = (b * weight + sepia_b * strength) as u8;
+                let (r, g, b) = proceed_pixel(r, g, b, strength);
 
                 output.put_pixel(x, y, Rgba([r, g, b, a]));
             }

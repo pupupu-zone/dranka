@@ -19,6 +19,18 @@ pub fn invert(init_base64: &str, strength: f32) -> String {
     utils::vec_to_base64(image_to_send.into_inner(), extension)
 }
 
+fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
+    let inverted_r = 255.0 - r;
+    let inverted_g = 255.0 - g;
+    let inverted_b = 255.0 - b;
+
+    let r = ((inverted_r * strength) + (r * (1.0 - strength))) as u8;
+    let g = ((inverted_g * strength) + (g * (1.0 - strength))) as u8;
+    let b = ((inverted_b * strength) + (b * (1.0 - strength))) as u8;
+
+    (r, g, b)
+}
+
 fn apply_invert(img: &DynamicImage, strength: f32) -> DynamicImage {
     let dynamic_image = match img.color() {
         ColorType::Rgb8 | ColorType::Rgb16 | ColorType::Rgb32F => {
@@ -27,17 +39,11 @@ fn apply_invert(img: &DynamicImage, strength: f32) -> DynamicImage {
             let mut output = ImageBuffer::new(width, height);
 
             for (x, y, pixel) in rgb_img.enumerate_pixels() {
-                let raw_r = pixel[0] as f32;
-                let raw_g = pixel[1] as f32;
-                let raw_b = pixel[2] as f32;
+                let r = pixel[0] as f32;
+                let g = pixel[1] as f32;
+                let b = pixel[2] as f32;
 
-                let inverted_r = 255.0 - raw_r;
-                let inverted_g = 255.0 - raw_g;
-                let inverted_b = 255.0 - raw_b;
-
-                let r = ((inverted_r * strength) + (raw_r * (1.0 - strength))) as u8;
-                let g = ((inverted_g * strength) + (raw_g * (1.0 - strength))) as u8;
-                let b = ((inverted_b * strength) + (raw_b * (1.0 - strength))) as u8;
+                let (r, g, b) = proceed_pixel(r, g, b, strength);
 
                 output.put_pixel(x, y, Rgb([r, g, b]));
             }
@@ -50,18 +56,12 @@ fn apply_invert(img: &DynamicImage, strength: f32) -> DynamicImage {
             let mut output = ImageBuffer::new(width, height);
 
             for (x, y, pixel) in rgba_img.enumerate_pixels() {
-                let raw_r = pixel[0] as f32;
-                let raw_g = pixel[1] as f32;
-                let raw_b = pixel[2] as f32;
+                let r = pixel[0] as f32;
+                let g = pixel[1] as f32;
+                let b = pixel[2] as f32;
                 let a = pixel[3] as u8;
 
-                let inverted_r = 255.0 - raw_r;
-                let inverted_g = 255.0 - raw_g;
-                let inverted_b = 255.0 - raw_b;
-
-                let r = ((inverted_r * strength) + (raw_r * (1.0 - strength))) as u8;
-                let g = ((inverted_g * strength) + (raw_g * (1.0 - strength))) as u8;
-                let b = ((inverted_b * strength) + (raw_b * (1.0 - strength))) as u8;
+                let (r, g, b) = proceed_pixel(r, g, b, strength);
 
                 output.put_pixel(x, y, Rgba([r, g, b, a]));
             }

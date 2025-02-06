@@ -21,12 +21,20 @@ pub fn grayscale(init_base64: &str, strength: f32) -> String {
     utils::vec_to_base64(image_to_send.into_inner(), extension)
 }
 
+fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
+    let gray = 0.3 * r + 0.6 * g + 0.12 * b;
+
+    let r = (r * (1.0 - strength) + gray * strength) as u8;
+    let g = (g * (1.0 - strength) + gray * strength) as u8;
+    let b = (b * (1.0 - strength) + gray * strength) as u8;
+
+    (r, g, b)
+}
+
 /*
  * We don't use default function because it doesn't have a strength param
  */
 fn adjust_grayscale(img: &DynamicImage, strength: f32) -> DynamicImage {
-    let weight = 1.0 - strength;
-
     let dynamic_image = match img.color() {
         ColorType::Rgb8 | ColorType::Rgb16 | ColorType::Rgb32F => {
             let rgb_img = img.to_rgb8();
@@ -38,13 +46,9 @@ fn adjust_grayscale(img: &DynamicImage, strength: f32) -> DynamicImage {
                 let g = pixel[1] as f32;
                 let b = pixel[2] as f32;
 
-                let gray = 0.3 * r + 0.6 * g + 0.12 * b;
+                let (r, g, b) = proceed_pixel(r, g, b, strength);
 
-                let r = r * weight + gray * strength;
-                let g = g * weight + gray * strength;
-                let b = b * weight + gray * strength;
-
-                output.put_pixel(x, y, Rgb([r as u8, g as u8, b as u8]));
+                output.put_pixel(x, y, Rgb([r, g, b]));
             }
 
             DynamicImage::ImageRgb8(output)
@@ -58,15 +62,11 @@ fn adjust_grayscale(img: &DynamicImage, strength: f32) -> DynamicImage {
                 let r = pixel[0] as f32;
                 let g = pixel[1] as f32;
                 let b = pixel[2] as f32;
-                let a = pixel[3] as f32;
+                let a = pixel[3] as u8;
 
-                let gray = 0.3 * r + 0.6 * g + 0.12 * b;
+                let (r, g, b) = proceed_pixel(r, g, b, strength);
 
-                let r = r * weight + gray * strength;
-                let g = g * weight + gray * strength;
-                let b = b * weight + gray * strength;
-
-                output.put_pixel(x, y, Rgba([r as u8, g as u8, b as u8, a as u8]));
+                output.put_pixel(x, y, Rgba([r, g, b, a]));
             }
 
             DynamicImage::ImageRgba8(output)

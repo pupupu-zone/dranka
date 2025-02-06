@@ -20,17 +20,63 @@ const COLOR_MATRIX: [[f32; 3]; 3] = [
 
 fn apply_tone_curve(x: f32) -> f32 {
     let mut x = x / 255.0;
-    // Highlights | Mid-tones | Shadows
 
+    // Highlights
     if x > 0.8 {
         x = 0.8 + (0.2 * ((x - 0.8) / 0.2).powf(1.5));
-    } else if x > 0.2 {
+    }
+    // Mid-tones
+    else if x > 0.2 {
         x = x + 0.05 * (((x - 0.2) / 0.6) * (1.0 - (x - 0.2) / 0.6));
-    } else {
+    }
+    // Shadows
+    else {
         x = x * (1.0 + (x / 0.2) * 0.1);
     }
 
     x * 255.0
+}
+
+fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
+    let hsl = Rgb::from(r, g, b).to_hsl();
+    let h = hsl.get_hue();
+    let s = hsl.get_saturation();
+    let l = hsl.get_lightness();
+
+    let s = s * SATURATION;
+    let rgb = Hsl::from(h, s, l).to_rgb();
+
+    let r = rgb.get_red();
+    let g = rgb.get_green();
+    let b = rgb.get_blue();
+
+    let matrix = [
+        [
+            (1.0 - strength) * IDENTITY_MATRIX[0][0] + strength * COLOR_MATRIX[0][0],
+            (1.0 - strength) * IDENTITY_MATRIX[0][1] + strength * COLOR_MATRIX[0][1],
+            (1.0 - strength) * IDENTITY_MATRIX[0][2] + strength * COLOR_MATRIX[0][2],
+        ],
+        [
+            (1.0 - strength) * IDENTITY_MATRIX[1][0] + strength * COLOR_MATRIX[1][0],
+            (1.0 - strength) * IDENTITY_MATRIX[1][1] + strength * COLOR_MATRIX[1][1],
+            (1.0 - strength) * IDENTITY_MATRIX[1][2] + strength * COLOR_MATRIX[1][2],
+        ],
+        [
+            (1.0 - strength) * IDENTITY_MATRIX[2][0] + strength * COLOR_MATRIX[2][0],
+            (1.0 - strength) * IDENTITY_MATRIX[2][1] + strength * COLOR_MATRIX[2][1],
+            (1.0 - strength) * IDENTITY_MATRIX[2][2] + strength * COLOR_MATRIX[2][2],
+        ],
+    ];
+
+    let r = r * matrix[0][0] + g * matrix[0][1] + b * matrix[0][2];
+    let g = r * matrix[1][0] + g * matrix[1][1] + b * matrix[1][2];
+    let b = r * matrix[2][0] + g * matrix[2][1] + b * matrix[2][2];
+
+    let r = apply_tone_curve(r) as u8;
+    let g = apply_tone_curve(g) as u8;
+    let b = apply_tone_curve(b) as u8;
+
+    (r, g, b)
 }
 
 #[wasm_bindgen]
@@ -61,43 +107,7 @@ fn apply_preset(img: &DynamicImage, strength: f32) -> DynamicImage {
                 let g = pixel[1] as f32;
                 let b = pixel[2] as f32;
 
-                let hsl = Rgb::from(r, g, b).to_hsl();
-                let h = hsl.get_hue();
-                let s = hsl.get_saturation();
-                let l = hsl.get_lightness();
-
-                let s = s * SATURATION;
-                let rgb = Hsl::from(h, s, l).to_rgb();
-
-                let r = rgb.get_red();
-                let g = rgb.get_green();
-                let b = rgb.get_blue();
-
-                let matrix = [
-                    [
-                        (1.0 - strength) * IDENTITY_MATRIX[0][0] + strength * COLOR_MATRIX[0][0],
-                        (1.0 - strength) * IDENTITY_MATRIX[0][1] + strength * COLOR_MATRIX[0][1],
-                        (1.0 - strength) * IDENTITY_MATRIX[0][2] + strength * COLOR_MATRIX[0][2],
-                    ],
-                    [
-                        (1.0 - strength) * IDENTITY_MATRIX[1][0] + strength * COLOR_MATRIX[1][0],
-                        (1.0 - strength) * IDENTITY_MATRIX[1][1] + strength * COLOR_MATRIX[1][1],
-                        (1.0 - strength) * IDENTITY_MATRIX[1][2] + strength * COLOR_MATRIX[1][2],
-                    ],
-                    [
-                        (1.0 - strength) * IDENTITY_MATRIX[2][0] + strength * COLOR_MATRIX[2][0],
-                        (1.0 - strength) * IDENTITY_MATRIX[2][1] + strength * COLOR_MATRIX[2][1],
-                        (1.0 - strength) * IDENTITY_MATRIX[2][2] + strength * COLOR_MATRIX[2][2],
-                    ],
-                ];
-
-                let r = r * matrix[0][0] + g * matrix[0][1] + b * matrix[0][2];
-                let g = r * matrix[1][0] + g * matrix[1][1] + b * matrix[1][2];
-                let b = r * matrix[2][0] + g * matrix[2][1] + b * matrix[2][2];
-
-                let r = apply_tone_curve(r) as u8;
-                let g = apply_tone_curve(g) as u8;
-                let b = apply_tone_curve(b) as u8;
+                let (r, g, b) = proceed_pixel(r, g, b, strength);
 
                 output.put_pixel(x, y, image::Rgb([r, g, b]));
             }
@@ -115,43 +125,7 @@ fn apply_preset(img: &DynamicImage, strength: f32) -> DynamicImage {
                 let b = pixel[2] as f32;
                 let a = pixel[3] as u8;
 
-                let hsl = Rgb::from(r, g, b).to_hsl();
-                let h = hsl.get_hue();
-                let s = hsl.get_saturation();
-                let l = hsl.get_lightness();
-
-                let s = s * SATURATION;
-                let rgb = Hsl::from(h, s, l).to_rgb();
-
-                let r = rgb.get_red();
-                let g = rgb.get_green();
-                let b = rgb.get_blue();
-
-                let matrix = [
-                    [
-                        (1.0 - strength) * IDENTITY_MATRIX[0][0] + strength * COLOR_MATRIX[0][0],
-                        (1.0 - strength) * IDENTITY_MATRIX[0][1] + strength * COLOR_MATRIX[0][1],
-                        (1.0 - strength) * IDENTITY_MATRIX[0][2] + strength * COLOR_MATRIX[0][2],
-                    ],
-                    [
-                        (1.0 - strength) * IDENTITY_MATRIX[1][0] + strength * COLOR_MATRIX[1][0],
-                        (1.0 - strength) * IDENTITY_MATRIX[1][1] + strength * COLOR_MATRIX[1][1],
-                        (1.0 - strength) * IDENTITY_MATRIX[1][2] + strength * COLOR_MATRIX[1][2],
-                    ],
-                    [
-                        (1.0 - strength) * IDENTITY_MATRIX[2][0] + strength * COLOR_MATRIX[2][0],
-                        (1.0 - strength) * IDENTITY_MATRIX[2][1] + strength * COLOR_MATRIX[2][1],
-                        (1.0 - strength) * IDENTITY_MATRIX[2][2] + strength * COLOR_MATRIX[2][2],
-                    ],
-                ];
-
-                let r = r * matrix[0][0] + g * matrix[0][1] + b * matrix[0][2];
-                let g = r * matrix[1][0] + g * matrix[1][1] + b * matrix[1][2];
-                let b = r * matrix[2][0] + g * matrix[2][1] + b * matrix[2][2];
-
-                let r = apply_tone_curve(r) as u8;
-                let g = apply_tone_curve(g) as u8;
-                let b = apply_tone_curve(b) as u8;
+                let (r, g, b) = proceed_pixel(r, g, b, strength);
 
                 output.put_pixel(x, y, image::Rgba([r, g, b, a]));
             }
