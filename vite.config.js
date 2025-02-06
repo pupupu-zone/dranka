@@ -83,7 +83,8 @@ const config = ({ mode }) => {
 				'@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
 				'@fonts': fileURLToPath(new URL('./src/assets/fonts', import.meta.url)),
 				'@views': fileURLToPath(new URL('./src/views', import.meta.url)),
-				'@shared': fileURLToPath(new URL('./src/shared-components', import.meta.url))
+				'@shared': fileURLToPath(new URL('./src/shared-components', import.meta.url)),
+				'@store': fileURLToPath(new URL('./src/store', import.meta.url))
 			}
 		},
 		server: {

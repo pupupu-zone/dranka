@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from 'react';
-
+import { useUnit } from 'effector-react';
+import { $images } from '@store';
 import MainContext from '@views/context';
 
 import FilterCard from '@shared/filter-card';
@@ -17,7 +18,8 @@ const FILTERS = [
 const FILTER_IDS = FILTERS.map((filter) => filter.id);
 
 const EffectsActions = () => {
-	const { previewImage64, actions } = useContext(MainContext);
+	const { preview64 } = useUnit($images);
+	const { actions } = useContext(MainContext);
 
 	const isSliderActive = useMemo(() => {
 		const isActive = actions.some((action) => {
@@ -27,7 +29,7 @@ const EffectsActions = () => {
 		return isActive;
 	}, [actions]);
 
-	if (!previewImage64) {
+	if (!preview64) {
 		return null;
 	}
 

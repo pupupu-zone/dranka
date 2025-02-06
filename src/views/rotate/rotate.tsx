@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import { useUnit } from 'effector-react';
 
-import MainContext from '@views/context';
+import { $images } from '@store';
 
 import ActionCard from '@shared/action-card';
 import FiltersList from '@shared/filters-list';
@@ -14,9 +15,9 @@ const ACTIONS = [
 ];
 
 const RotateActions = () => {
-	const { originalImage64 } = useContext(MainContext);
+	const { preview64 } = useUnit($images);
 
-	if (!originalImage64) {
+	if (!preview64) {
 		return null;
 	}
 

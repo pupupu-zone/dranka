@@ -25,10 +25,6 @@ const Navigation = () => {
 						Transform
 					</Header>
 
-					<Header as={Link} to="/crop" activeProps={{ className: 'active' }} disabled>
-						Crop
-					</Header>
-
 					<Header as={Link} to="/export" activeProps={{ className: 'active' }}>
 						Export
 					</Header>

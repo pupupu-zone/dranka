@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useUnit } from 'effector-react';
 
-import MainContext from '@views/context';
+import { $images } from '@store';
+
 import Root, { Canvas } from './image-preview.styles';
 
 const ImagePreview = () => {
+	const { preview64 } = useUnit($images);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const { previewImage64 } = useContext(MainContext);
 
 	useEffect(() => {
-		if (!previewImage64) return;
+		if (!preview64) return;
 
 		const canvas = canvasRef.current;
 		if (!canvas) return;
@@ -32,8 +34,8 @@ const ImagePreview = () => {
 			ctx.fillText('Error', 10, 50);
 		};
 
-		image.src = previewImage64;
-	}, [canvasRef, previewImage64]);
+		image.src = preview64;
+	}, [canvasRef, preview64]);
 
 	return (
 		<Root>

@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Outlet } from '@tanstack/react-router';
 
+import { useUnit } from 'effector-react';
+import { $images, setOriginal64, setPreview64 } from '@store';
+
 import MainContext, { type ActionT } from '@views/context';
-import { grayscale, invert, sepia, blur, minify_image, rotate, flip, astia_soft } from '@wasm/dranka';
+import { grayscale, invert, sepia, blur, rotate, flip, astia_soft } from '@wasm/dranka';
 
 import Navigation from './navigation';
 import UploadImage from './upload-image';
@@ -10,28 +13,17 @@ import ImagePreview from './image-preview';
 import Root, { Main } from './main.styles';
 
 const MainView = () => {
+	const images = useUnit($images);
 	const [actions, setActions] = useState<ActionT[]>([]);
 	const fileReader = useRef(new FileReader());
-	const [compressedImage64, setCompressedImage64] = useState('');
-	const [originalImage64, setOriginalImage64] = useState('');
-	const [previewImage64, setPreviewImage64] = useState('');
 
 	useEffect(() => {
 		fileReader.current.onloadend = () => {
 			const result = fileReader.current.result as string;
 
-			setOriginalImage64(result);
-
-			const minified = minify_image(result);
-			setCompressedImage64(minified);
+			setOriginal64(result);
 		};
 	}, []);
-
-	useEffect(() => {
-		if (!compressedImage64) return;
-
-		setPreviewImage64(compressedImage64);
-	}, [compressedImage64]);
 
 	const hasFiltersChanged = React.useMemo(() => {
 		const key = actions.map((action) => ({
@@ -43,11 +35,11 @@ const MainView = () => {
 	}, [actions]);
 
 	useEffect(() => {
-		if (!compressedImage64) return;
+		if (!images.compressed64) return;
 
-		const modifiedImage = applyFilters(actions, compressedImage64);
+		const modifiedImage = applyFilters(actions, images.compressed64);
 
-		setPreviewImage64(modifiedImage);
+		setPreview64(modifiedImage);
 	}, [hasFiltersChanged]);
 
 	const applyFilters = (actions: ActionT[], imageToModify: string) => {
@@ -155,8 +147,6 @@ const MainView = () => {
 			// @TODO: Replace this shit with something more reliable
 			// like effector or whatever idc
 			value={{
-				originalImage64,
-				previewImage64,
 				applyFilters,
 
 				// REFACTORED:
@@ -172,9 +162,9 @@ const MainView = () => {
 				<Navigation />
 
 				<Main>
-					{originalImage64 && <ImagePreview />}
+					{images.preview64 && <ImagePreview />}
 
-					{!originalImage64 && <UploadImage fileReader={fileReader.current} />}
+					{!images.preview64 && <UploadImage fileReader={fileReader.current} />}
 				</Main>
 
 				<Outlet />

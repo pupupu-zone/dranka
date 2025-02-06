@@ -1,21 +1,25 @@
 import React, { useContext } from 'react';
-import MainContext from '@views/context';
+import { useUnit } from 'effector-react';
 
+import { $images } from '@store';
 import { saveBase64 } from '@utils';
 
 import { Button as AriaButton } from 'react-aria-components';
 import Root, { Button } from './export.styles';
 
+import MainContext from '@views/context';
+
 const ExportView = () => {
-	const { actions, applyFilters, originalImage64 } = useContext(MainContext);
+	const { original64 } = useUnit($images);
+	const { actions, applyFilters } = useContext(MainContext);
 
 	const saveImage = () => {
-		const modifiedImage = applyFilters(actions, originalImage64);
+		const modifiedImage = applyFilters(actions, original64);
 
 		saveBase64(modifiedImage, 'image');
 	};
 
-	if (!originalImage64) {
+	if (!original64) {
 		return null;
 	}
 

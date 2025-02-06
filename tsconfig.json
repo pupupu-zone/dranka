@@ -61,7 +61,10 @@
       "@views": ["./src/views/index"],
       "@views/*": ["./src/views/*"],
 
-      "@shared/*": ["./src/shared-components/*"]
+      "@shared/*": ["./src/shared-components/*"],
+
+      "@store": ["./src/store/index"],
+      "@store/*": ["./src/store/*"],
     }
   },
   "include": ["src"],
