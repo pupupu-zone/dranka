@@ -12,8 +12,14 @@ import Root, { SliderRoot, Test, Scroll, InnerList } from './color.styles';
 const FILTERS = [
 	{ id: 'reset', label: 'Reset all' },
 	{ id: 'astia-soft', label: 'A-Soft' },
+	{ id: 'bleach-bypass', label: 'Bleach' },
+	{ id: 'classic-neg', label: 'Classic Neg' },
+	{ id: 'eterna-cinema', label: 'Eterna' },
+	{ id: 'provia-std', label: 'Provia' },
+	{ id: 'velvia-vivid', label: 'Velvia' },
 	{ id: 'nostalgic', label: 'Nostalgic' },
-	{ id: 'neg-hi', label: 'Neg-Hi' }
+	{ id: 'neg-hi', label: 'Neg-Hi' },
+	{ id: 'neg-std', label: 'Nrg-Std' }
 ];
 
 const FILTER_IDS = FILTERS.map((filter) => filter.id);

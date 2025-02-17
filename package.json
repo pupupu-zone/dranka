@@ -63,5 +63,6 @@
     "vite-plugin-svgr": "^4.3.0",
     "vite-plugin-wasm": "^3.4.1",
     "vite-plugin-watch": "^0.3.1"
-  }
+  },
+  "packageManager": "pnpm@7.16.0+sha512.8c60deee4cfac26a098a2127fb3401c15fa1d0f6b3b2f91e5c64b94673346c4003dab4f1311fa839f8567ee1035dd7620687020cdbaea353cbe0286ebd1d2dfe"
 }

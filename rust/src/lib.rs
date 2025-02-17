@@ -14,3 +14,6 @@ pub use rotation::*;
 
 mod color;
 pub use color::*;
+
+mod films;
+pub use films::*;

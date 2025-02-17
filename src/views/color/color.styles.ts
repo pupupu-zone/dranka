@@ -10,12 +10,12 @@ export default styled.div`
 	position: fixed;
 	bottom: 0;
 	left: 50%;
-	width: 100vw;
-	transform: translateX(-50%);
-	backdrop-filter: blur(2px);
 	display: grid;
 	grid-auto-flow: dense;
 	gap: 24px;
+	width: 100vw;
+	transform: translateX(-50%);
+	backdrop-filter: blur(2px);
 `;
 
 export const InnerList = styled.div`
@@ -35,6 +35,7 @@ export const Scroll = styled.div`
 `;
 
 export const Test = styled.div`
+	width: 100vw;
 	padding: 18px 0;
 	background-color: #5f5f5f80;
 `;

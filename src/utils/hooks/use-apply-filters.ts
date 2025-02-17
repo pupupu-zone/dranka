@@ -1,7 +1,23 @@
 import { useUnit } from 'effector-react';
 import $actions from '@store/actions';
 
-import { grayscale, invert, sepia, blur, rotate, flip, astia_soft, nostalgic_neg, neg_hi } from '@wasm/dranka';
+import {
+	grayscale,
+	invert,
+	sepia,
+	blur,
+	rotate,
+	flip,
+	astia,
+	nostalgic_neg,
+	neg_hi,
+	classic_neg,
+	eterna_cinema,
+	provia_std,
+	velvia_vivid,
+	neg_std,
+	bleach
+} from '@wasm/dranka';
 
 const useApplyFilters = () => {
 	const actions = useUnit($actions);
@@ -48,10 +64,12 @@ const useApplyFilters = () => {
 					}
 					break;
 				}
+
+				// Films
 				case 'astia-soft': {
 					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
 
-					modifiedImage = astia_soft(modifiedImage, strength);
+					modifiedImage = astia(modifiedImage, strength);
 					break;
 				}
 				case 'nostalgic': {
@@ -64,6 +82,42 @@ const useApplyFilters = () => {
 					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
 
 					modifiedImage = neg_hi(modifiedImage, strength);
+					break;
+				}
+				case 'neg-std': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+
+					modifiedImage = neg_std(modifiedImage, strength);
+					break;
+				}
+				case 'provia-std': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+
+					modifiedImage = provia_std(modifiedImage, strength);
+					break;
+				}
+				case 'velvia-vivid': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+
+					modifiedImage = velvia_vivid(modifiedImage, strength);
+					break;
+				}
+				case 'bleach-bypass': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+
+					modifiedImage = bleach(modifiedImage, strength);
+					break;
+				}
+				case 'classic-neg': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+
+					modifiedImage = classic_neg(modifiedImage, strength);
+					break;
+				}
+				case 'eterna-cinema': {
+					const strength = typeof action.weight === 'number' ? action.weight / 100 : 1;
+
+					modifiedImage = eterna_cinema(modifiedImage, strength);
 					break;
 				}
 			}
