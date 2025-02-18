@@ -1,7 +1,7 @@
 use image::{ColorType, DynamicImage, GenericImageView, ImageBuffer};
 use wasm_bindgen::prelude::*;
 
-use crate::color::film_utils::{add_dither, apply_color_grading, apply_curve};
+use crate::color::film_utils::{apply_color_grading, apply_curve};
 use crate::color::types::{ColorGrading, Curves, ToneCurve};
 use crate::utils;
 
@@ -14,7 +14,7 @@ const COLOR_MATRIX: [[f32; 3]; 3] = [
 const TONE_CURVE: ToneCurve = ToneCurve {
     contrast: 1.1,
     black_point: 0.01,
-    white_point: 0.99,
+    white_point: 0.95,
 };
 
 const CURVES: Curves = Curves {
@@ -111,14 +111,9 @@ fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u16, u16, u16) {
 
     let (r, g, b) = apply_color_grading(r, g, b, strength, &COLOR_GRADING);
 
-    let dither_strength = 1.0 / 65535.0; // Adjust this value to control dithering amount
-    let r_dithered = add_dither(r, dither_strength);
-    let g_dithered = add_dither(g, dither_strength);
-    let b_dithered = add_dither(b, dither_strength);
-
     (
-        (r_dithered * 65535.0) as u16,
-        (g_dithered * 65535.0) as u16,
-        (b_dithered * 65535.0) as u16,
+        (r * 65535.0) as u16,
+        (g * 65535.0) as u16,
+        (b * 65535.0) as u16,
     )
 }
