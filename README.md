@@ -10,3 +10,5 @@ cd ./rust
 
 wasm-pack build --target web
 ```
+
+https://www.color.org/whitepapers/ICC_White_Paper35-Use_of_the_parametricCurveType.pdf

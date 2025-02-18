@@ -1,5 +1,9 @@
 pub struct ToneCurve {
     pub contrast: f32,
+    /*
+     * Black point can be defined as the darkest point in an image or photograph.
+    	* It is the point where the color values of the pixels are at their lowest, resulting in a pure black color
+    	*/
     pub black_point: f32,
     pub white_point: f32,
 }

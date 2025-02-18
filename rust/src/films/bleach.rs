@@ -6,30 +6,30 @@ use crate::color::types::{ColorGrading, Curves, ToneCurve};
 use crate::utils;
 
 const COLOR_MATRIX: [[f32; 3]; 3] = [
-    [1.15, 0.08, 0.08], // Keeping the same color response
-    [0.08, 1.12, 0.08],
-    [0.08, 0.08, 1.12],
+    [1.15, 0.08, 0.08], // r
+    [0.08, 1.12, 0.08], // g
+    [0.08, 0.08, 1.12], // b
 ];
 
 const TONE_CURVE: ToneCurve = ToneCurve {
-    contrast: 1.28,     // Reduced contrast to help with highlight transitions
-    black_point: 0.02,  // Keep the same black point
-    white_point: 0.985, // Increased white point for smoother highlight rolloff
+    contrast: 1.28,
+    black_point: 0.02,
+    white_point: 0.985,
 };
 
 const CURVES: Curves = Curves {
-    toe_strength: 0.35, // Keep the same shadow handling
+    toe_strength: 0.35,
     toe_threshold: 0.18,
     shadow_strength: 1.18,
     shadow_threshold: 0.32,
-    highlight_strength: 0.92, // Increased from 0.88 for smoother highlight transition
-    highlight_threshold: 0.78, // Moved threshold for more gradual highlight handling
-    shoulder_strength: 0.22,  // Reduced shoulder strength for gentler rolloff
-    shoulder_threshold: 0.82, // Increased threshold for more gradual transition in extreme highlights
+    highlight_strength: 0.92,
+    highlight_threshold: 0.78,
+    shoulder_strength: 0.22,
+    shoulder_threshold: 0.82,
 };
 
 const COLOR_GRADING: ColorGrading = ColorGrading {
-    saturation: 0.75, // Keep the same color properties
+    saturation: 0.75,
     vibrance: 0.85,
     temperature: 0.98,
     tint: 1.02,
@@ -108,7 +108,7 @@ fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
 
     let (r, g, b) = apply_color_grading(r, g, b, strength, &COLOR_GRADING);
 
-    let dither_strength = 1.0 / 255.0; // Adjust this value to control dithering amount
+    let dither_strength = 1.0 / 255.0;
     let r_dithered = add_dither(r, dither_strength);
     let g_dithered = add_dither(g, dither_strength);
     let b_dithered = add_dither(b, dither_strength);

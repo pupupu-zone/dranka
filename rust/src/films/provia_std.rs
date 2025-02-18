@@ -6,33 +6,33 @@ use crate::color::types::{ColorGrading, Curves, ToneCurve};
 use crate::utils;
 
 const COLOR_MATRIX: [[f32; 3]; 3] = [
-    [1.1, -0.04, -0.04], // R - Balanced red response
-    [-0.04, 1.1, -0.04], // G - Equal green enhancement
-    [-0.04, -0.04, 1.1], // B - Balanced blue response
+    [1.1, -0.04, -0.04], // R
+    [-0.04, 1.1, -0.04], // G
+    [-0.04, -0.04, 1.1], // B
 ];
 
 const TONE_CURVE: ToneCurve = ToneCurve {
-    contrast: 1.2,      // Standard contrast
-    black_point: 0.008, // Natural black point
-    white_point: 0.992, // Natural white point
+    contrast: 1.2,
+    black_point: 0.008,
+    white_point: 0.992,
 };
 
 const CURVES: Curves = Curves {
-    toe_strength: 0.3,        // Standard toe response
-    toe_threshold: 0.15,      // Natural shadow transition
-    shadow_strength: 1.1,     // Moderate shadow contrast
-    shadow_threshold: 0.35,   // Standard shadow threshold
-    highlight_strength: 0.9,  // Natural highlight handling
-    highlight_threshold: 0.7, // Standard highlight transition
-    shoulder_strength: 0.25,  // Moderate shoulder
-    shoulder_threshold: 0.85, // Natural highlight rolloff
+    toe_strength: 0.3,
+    toe_threshold: 0.15,
+    shadow_strength: 1.1,
+    shadow_threshold: 0.35,
+    highlight_strength: 0.9,
+    highlight_threshold: 0.7,
+    shoulder_strength: 0.25,
+    shoulder_threshold: 0.85,
 };
 
 const COLOR_GRADING: ColorGrading = ColorGrading {
-    saturation: 1.1,  // Moderate saturation boost
-    vibrance: 1.05,   // Slight vibrance enhancement
-    temperature: 1.0, // Neutral temperature
-    tint: 1.0,        // Neutral tint
+    saturation: 1.1,
+    vibrance: 1.05,
+    temperature: 1.0,
+    tint: 1.0,
 };
 
 #[wasm_bindgen]
@@ -108,7 +108,7 @@ fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
 
     let (r, g, b) = apply_color_grading(r, g, b, strength, &COLOR_GRADING);
 
-    let dither_strength = 1.0 / 255.0; // Adjust this value to control dithering amount
+    let dither_strength = 1.0 / 255.0;
     let r_dithered = add_dither(r, dither_strength);
     let g_dithered = add_dither(g, dither_strength);
     let b_dithered = add_dither(b, dither_strength);

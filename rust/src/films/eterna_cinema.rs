@@ -108,7 +108,7 @@ fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
 
     let (r, g, b) = apply_color_grading(r, g, b, strength, &COLOR_GRADING);
 
-    let dither_strength = 1.0 / 255.0; // Adjust this value to control dithering amount
+    let dither_strength = 1.0 / 255.0;
     let r_dithered = add_dither(r, dither_strength);
     let g_dithered = add_dither(g, dither_strength);
     let b_dithered = add_dither(b, dither_strength);

@@ -6,33 +6,33 @@ use crate::color::types::{ColorGrading, Curves, ToneCurve};
 use crate::utils;
 
 const COLOR_MATRIX: [[f32; 3]; 3] = [
-    [1.08, -0.03, -0.03], // R - Gentle red response for natural skin tones
-    [-0.03, 1.06, -0.02], // G - Moderate green response
-    [-0.02, -0.03, 1.06], // B - Balanced blue for natural look
+    [1.08, -0.03, -0.03], // R
+    [-0.03, 1.06, -0.02], // G
+    [-0.02, -0.03, 1.06], // B
 ];
 
 const TONE_CURVE: ToneCurve = ToneCurve {
-    contrast: 1.15,     // Moderate contrast, less than Pro Neg Hi
-    black_point: 0.012, // Gentle black point
-    white_point: 0.985, // Natural white point
+    contrast: 1.15,
+    black_point: 0.012,
+    white_point: 0.985,
 };
 
 const CURVES: Curves = Curves {
-    toe_strength: 0.28,        // Moderate toe for natural shadows
-    toe_threshold: 0.14,       // Lower threshold for shadow detail
-    shadow_strength: 1.08,     // Gentle shadow contrast
-    shadow_threshold: 0.32,    // Natural shadow transition
-    highlight_strength: 0.92,  // Gentle highlight compression
-    highlight_threshold: 0.68, // Natural highlight transition
-    shoulder_strength: 0.22,   // Gentle shoulder
-    shoulder_threshold: 0.82,  // Natural highlight rolloff
+    toe_strength: 0.28,
+    toe_threshold: 0.14,
+    shadow_strength: 1.08,
+    shadow_threshold: 0.32,
+    highlight_strength: 0.92,
+    highlight_threshold: 0.68,
+    shoulder_strength: 0.22,
+    shoulder_threshold: 0.82,
 };
 
 const COLOR_GRADING: ColorGrading = ColorGrading {
-    saturation: 1.05, // Slightly enhanced saturation
-    vibrance: 1.03,   // Gentle vibrance boost
-    temperature: 1.0, // Neutral temperature
-    tint: 1.0,        // Neutral tint
+    saturation: 1.05,
+    vibrance: 1.03,
+    temperature: 1.0,
+    tint: 1.0,
 };
 
 #[wasm_bindgen]
@@ -108,7 +108,7 @@ fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
 
     let (r, g, b) = apply_color_grading(r, g, b, strength, &COLOR_GRADING);
 
-    let dither_strength = 1.0 / 255.0; // Adjust this value to control dithering amount
+    let dither_strength = 1.0 / 255.0;
     let r_dithered = add_dither(r, dither_strength);
     let g_dithered = add_dither(g, dither_strength);
     let b_dithered = add_dither(b, dither_strength);

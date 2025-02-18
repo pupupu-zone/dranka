@@ -28,7 +28,13 @@ pub fn vec_to_base64(wrk_image: Vec<u8>, extension: ImageFormat) -> String {
 pub fn create_image(wrk_image: DynamicImage, extension: ImageFormat) -> Cursor<Vec<u8>> {
     let mut buffer = Cursor::new(vec![]);
 
-    wrk_image
+    let output_image = match wrk_image {
+        DynamicImage::ImageRgb16(_) => wrk_image.to_rgb8().into(),
+        DynamicImage::ImageRgba16(_) => wrk_image.to_rgba8().into(),
+        _ => wrk_image,
+    };
+
+    output_image
         .write_to(&mut buffer, extension)
         .expect("Failed to write image");
 

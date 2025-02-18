@@ -12,10 +12,21 @@ pub fn apply_gamma(value: f32, gamma: f32) -> f32 {
 }
 
 pub fn apply_curve(x: f32, strength: f32, curves: &Curves, tone_curve: &ToneCurve) -> f32 {
-    // Normalize input
+    /*
+     * Normalize input
+     *
+     * So we will work with defined range of input
+     */
     let x = x.clamp(0.0, 1.0);
 
-    // Apply black and white point normalization
+    /*
+     * Apply black and white point normalization
+     *
+     * Stretches or compresses the tonal range to fit between the black point and white point
+     * black_point is where true black should start; Values below black_point get mapped to 0
+     * white_point is where true white should start; Values above white_point get mapped to 1
+     * tone_curve.white_point - tone_curve.black_point calculates the new range
+     */
     let x = (x - tone_curve.black_point) / (tone_curve.white_point - tone_curve.black_point);
 
     let y = if x < curves.toe_threshold {
@@ -45,9 +56,10 @@ pub fn apply_curve(x: f32, strength: f32, curves: &Curves, tone_curve: &ToneCurv
             + highlight_adjusted * (curves.shoulder_threshold - curves.highlight_threshold)
     } else {
         // Shoulder region - extreme highlights
-        let normalized = (x - curves.shoulder_threshold) / (1.0 - curves.shoulder_threshold);
-        let curved = 1.0 / (1.0 + (-normalized * curves.shoulder_strength).exp());
-        curves.shoulder_threshold + curved * (1.0 - curves.shoulder_threshold)
+        x
+        // let normalized = (x - curves.shoulder_threshold) / (1.0 - curves.shoulder_threshold);
+        // let curved = 1.0 / (1.0 + (-normalized * curves.shoulder_strength).exp());
+        // curves.shoulder_threshold + curved * (1.0 - curves.shoulder_threshold)
     };
 
     // Final blend

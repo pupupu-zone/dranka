@@ -6,33 +6,33 @@ use crate::color::types::{ColorGrading, Curves, ToneCurve};
 use crate::utils;
 
 const COLOR_MATRIX: [[f32; 3]; 3] = [
-    [1.25, -0.1, -0.1],  // R - Strong red response for vivid reds
-    [-0.08, 1.2, -0.08], // G - Enhanced greens for foliage
-    [-0.1, -0.1, 1.25],  // B - Strong blue for dramatic skies
+    [1.25, -0.1, -0.1],  // R
+    [-0.08, 1.2, -0.08], // G
+    [-0.1, -0.1, 1.25],  // B
 ];
 
 const TONE_CURVE: ToneCurve = ToneCurve {
-    contrast: 1.35,    // High contrast for punch
-    black_point: 0.01, // Deep blacks
-    white_point: 0.99, // Bright whites
+    contrast: 1.35,
+    black_point: 0.01,
+    white_point: 0.99,
 };
 
 const CURVES: Curves = Curves {
-    toe_strength: 0.35,        // Strong toe for rich shadows
-    toe_threshold: 0.13,       // Lower threshold for dramatic shadows
-    shadow_strength: 1.2,      // Strong shadow contrast
-    shadow_threshold: 0.3,     // Lower threshold for punch
-    highlight_strength: 0.85,  // Stronger highlight compression
-    highlight_threshold: 0.75, // Higher threshold for bright skies
-    shoulder_strength: 0.3,    // Strong shoulder
-    shoulder_threshold: 0.88,  // Later highlight compression
+    toe_strength: 0.35,
+    toe_threshold: 0.13,
+    shadow_strength: 1.2,
+    shadow_threshold: 0.3,
+    highlight_strength: 0.85,
+    highlight_threshold: 0.75,
+    shoulder_strength: 0.3,
+    shoulder_threshold: 0.88,
 };
 
 const COLOR_GRADING: ColorGrading = ColorGrading {
-    saturation: 1.4,   // Very high saturation
-    vibrance: 1.25,    // Strong vibrance
-    temperature: 0.98, // Slightly cool
-    tint: 0.99,        // Slightly green-biased
+    saturation: 1.4,
+    vibrance: 1.25,
+    temperature: 0.98,
+    tint: 0.99,
 };
 
 #[wasm_bindgen]

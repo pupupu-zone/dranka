@@ -6,33 +6,33 @@ use crate::color::types::{ColorGrading, Curves, ToneCurve};
 use crate::utils;
 
 const COLOR_MATRIX: [[f32; 3]; 3] = [
-    [1.15, -0.08, -0.07], // R - Increased red response, stronger color separation
-    [-0.07, 1.12, -0.05], // G - Higher contrast in greens
-    [-0.05, -0.07, 1.12], // B - Slightly cooler overall tone
+    [1.15, -0.08, -0.07], // R
+    [-0.07, 1.12, -0.05], // G
+    [-0.05, -0.07, 1.12], // B
 ];
 
 const TONE_CURVE: ToneCurve = ToneCurve {
-    contrast: 1.25,     // Higher contrast than ASTIA
-    black_point: 0.015, // Deeper blacks for more punch
-    white_point: 0.98,  // Slightly lower white point for contrast
+    contrast: 1.25,
+    black_point: 0.015,
+    white_point: 0.98,
 };
 
 const CURVES: Curves = Curves {
-    toe_strength: 0.25,       // Less toe for harder shadows
-    toe_threshold: 0.12,      // Lower threshold for shadow transition
-    shadow_strength: 1.15,    // Stronger shadow contrast
-    shadow_threshold: 0.3,    // Lower threshold for more dramatic shadows
-    highlight_strength: 0.9,  // Slightly compressed highlights
-    highlight_threshold: 0.7, // Higher threshold for highlight compression
-    shoulder_strength: 0.25,  // Stronger shoulder for highlight roll-off
-    shoulder_threshold: 0.82, // Lower threshold for earlier highlight compression
+    toe_strength: 0.25,
+    toe_threshold: 0.12,
+    shadow_strength: 1.15,
+    shadow_threshold: 0.3,
+    highlight_strength: 0.9,
+    highlight_threshold: 0.7,
+    shoulder_strength: 0.25,
+    shoulder_threshold: 0.82,
 };
 
 const COLOR_GRADING: ColorGrading = ColorGrading {
-    saturation: 1.15,  // Higher saturation
-    vibrance: 1.08,    // Increased vibrance for more color impact
-    temperature: 0.98, // Slightly cooler
-    tint: 1.0,         // Neutral tint
+    saturation: 1.15,
+    vibrance: 1.08,
+    temperature: 0.98,
+    tint: 1.0,
 };
 
 #[wasm_bindgen]
@@ -108,7 +108,7 @@ fn proceed_pixel(r: f32, g: f32, b: f32, strength: f32) -> (u8, u8, u8) {
 
     let (r, g, b) = apply_color_grading(r, g, b, strength, &COLOR_GRADING);
 
-    let dither_strength = 1.0 / 255.0; // Adjust this value to control dithering amount
+    let dither_strength = 1.0 / 255.0;
     let r_dithered = add_dither(r, dither_strength);
     let g_dithered = add_dither(g, dither_strength);
     let b_dithered = add_dither(b, dither_strength);
